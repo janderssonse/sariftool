@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "drivername",
+          "organization": "driverorg",
+          "semanticVersion": "10.0.0",
+          "rules": [
+            {
+              "id": "aruleid",
+              "name": "java/continue-in-false-loop",
+              "shortDescription": {
+                "text": "Continue statement that does not continue"
+              },
+              "fullDescription": {
+                "text": "A 'continue' statement only re-runs the loop if the loop-condition is true. Therefore using 'continue' in a loop with a constant false condition is misleading and usually a bug."
+              },
+              "defaultConfiguration": {},
+              "properties": {
+                "tags": [
+                  "correctness"
+                ],
+                "kind": "problem",
+                "precision": "high",
+                "name": "Continue statement that does not continue",
+                "description": "A 'continue' statement only re-runs the loop if the\n              loop-condition is true. Therefore using 'continue' in a loop\n              with a constant false condition is misleading and usually a\n              bug.",
+                "id": "aruleid",
+                "problem.severity": "error"
+              }
+            }
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "location": {
+            "uri": "src/code.java",
+            "uriBaseId": "%SRCROOT%",
+            "index": 0
+          }
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "aruleid",
+          "ruleIndex": 0,
+          "message": {
+            "text": "amessage"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/code.java",
+                  "uriBaseId": "auribaseid",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 1,
+                  "endLine": 26,
+                  "startColumn": 2,
+                  "endColumn": 3
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "semmle.formatSpecifier": "sarif-latest"
+      }
+    }
+  ]
+}

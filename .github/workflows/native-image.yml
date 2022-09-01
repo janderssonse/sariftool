@@ -1,0 +1,47 @@
+name: GraalVM Native Image builds
+on: [workflow_call, workflow_dispatch]
+
+jobs:
+  build:
+    name: sariftool on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: "22.2.0"
+          java-version: "17"
+          components: "native-image"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      #TODO - this could downloaded from earlier steps/uploaded artifact instead
+      - name: Build fat jar
+        if: contains(matrix.os, 'win') == false
+        run: chmod +x ./mvnw
+      - name: Maven Package
+        run: ./mvnw clean -Pfatjar  --batch-mode --update-snapshots --file pom.xml package
+
+      - name: Build native image
+        run: |
+          ./mvnw -Pnative -B --file pom.xml  package
+          ./target/sariftool-0.0.1-SNAPSHOT -h
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: sariftool-bin-${{ matrix.os }}
+          path: |
+            target/sariftool*
+            !target/**/*.jar
