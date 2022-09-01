@@ -1,0 +1,84 @@
+{
+  "issues": [
+    {
+      "engineId": "Checkstyle Checkstyle v10.3.2",
+      "ruleId": "import.unused",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "Unused import - java.util.Optional.",
+        "filePath": "src/main/java/se/janderssonse/sarifconvert/cli/sonar/dto/TextRange.java",
+        "textRange": {
+          "startLine": 18,
+          "endLine": 18,
+          "startColumn": 8
+        }
+      },
+      "effortMinutes": 0
+    },
+    {
+      "engineId": "Checkstyle Checkstyle v10.3.2",
+      "ruleId": "javadoc.missing",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "Missing a Javadoc comment.",
+        "filePath": "src/main/java/se/janderssonse/sarifconvert/cli/sonar/dto/TextRange.java",
+        "textRange": {
+          "startLine": 27,
+          "endLine": 27,
+          "startColumn": 3
+        }
+      },
+      "effortMinutes": 0
+    },
+    {
+      "engineId": "Checkstyle Checkstyle v10.3.2",
+      "ruleId": "javadoc.missing",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "Missing a Javadoc comment.",
+        "filePath": "src/main/java/se/janderssonse/sarifconvert/cli/sonar/dto/TextRange.java",
+        "textRange": {
+          "startLine": 28,
+          "endLine": 28,
+          "startColumn": 3
+        }
+      },
+      "effortMinutes": 0
+    },
+    {
+      "engineId": "Checkstyle Checkstyle v10.3.2",
+      "ruleId": "javadoc.missing",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "Missing a Javadoc comment.",
+        "filePath": "src/main/java/se/janderssonse/sarifconvert/cli/sonar/dto/TextRange.java",
+        "textRange": {
+          "startLine": 29,
+          "endLine": 29,
+          "startColumn": 3
+        }
+      },
+      "effortMinutes": 0
+    },
+    {
+      "engineId": "Checkstyle Checkstyle v10.3.2",
+      "ruleId": "javadoc.missing",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "Missing a Javadoc comment.",
+        "filePath": "src/main/java/se/janderssonse/sarifconvert/cli/sonar/dto/TextRange.java",
+        "textRange": {
+          "startLine": 30,
+          "endLine": 30,
+          "startColumn": 3
+        }
+      },
+      "effortMinutes": 0
+    }
+  ]
+}

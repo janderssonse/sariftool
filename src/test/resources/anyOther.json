@@ -1,0 +1,5 @@
+{
+  "schema" : "none",
+  "version" : "2.1.0",
+  "description" : "Yet another json file but not a valid SARIF one."
+}

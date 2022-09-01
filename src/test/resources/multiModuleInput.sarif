@@ -1,0 +1,537 @@
+{
+  "$schema" : "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version" : "2.1.0",
+  "runs" : [ {
+    "tool" : {
+      "driver" : {
+        "name" : "CodeQL",
+        "organization" : "GitHub",
+        "semanticVersion" : "2.5.2",
+        "rules" : [ {
+          "id" : "java/missing-override-annotation",
+          "name" : "java/missing-override-annotation",
+          "shortDescription" : {
+            "text" : "Missing Override annotation"
+          },
+          "fullDescription" : {
+            "text" : "A method that overrides a method in a superclass but does not have an 'Override' annotation cannot take advantage of compiler checks, and makes code less readable."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "properties" : {
+            "tags" : [ "maintainability" ],
+            "kind" : "problem",
+            "precision" : "high",
+            "name" : "Missing Override annotation",
+            "description" : "A method that overrides a method in a superclass but does not have an 'Override'\n              annotation cannot take advantage of compiler checks, and makes code less readable.",
+            "id" : "java/missing-override-annotation",
+            "problem.severity" : "recommendation"
+          }
+        } ]
+      },
+      "extensions" : [ {
+        "name" : "legacy-libraries-cpp",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/cpp/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/cpp/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-cpp",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/ql/src/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/ql/src/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-python-tests",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/ql/test/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/ql/test/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "legacy-libraries-python",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/python/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/python/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-python-examples",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/ql/examples/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/ql/examples/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-csharp-examples",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/ql/examples/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/ql/examples/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "legacy-libraries-csharp",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/csharp/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/csharp/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-java-tests",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/ql/test/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/ql/test/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "legacy-libraries-java",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/java/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/java/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-csharp-tests",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/ql/test/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/ql/test/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-cpp-upgrades",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/upgrades/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/upgrades/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-csharp-upgrades",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/upgrades/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/upgrades/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-python",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/ql/src/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/ql/src/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-python-upgrades",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/upgrades/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/python/upgrades/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-javascript",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/ql/src/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/ql/src/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "legacy-upgrades",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-cli/legacy-upgrades/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-cli/legacy-upgrades/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "legacy-libraries-javascript",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/javascript/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/legacy-support/javascript/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-javascript-upgrades",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/upgrades/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/upgrades/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-suite-helpers",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/suite-helpers/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/misc/suite-helpers/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-java-upgrades",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/upgrades/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/upgrades/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-java-examples",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/ql/examples/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/ql/examples/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-javascript-tests",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/ql/test/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/ql/test/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-csharp",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/ql/src/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/csharp/ql/src/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-javascript-examples",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/ql/examples/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/javascript/ql/examples/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-cpp-examples",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/ql/examples/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/ql/examples/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-cpp-tests",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/ql/test/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/cpp/ql/test/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      }, {
+        "name" : "codeql-java",
+        "semanticVersion" : "0.0.0",
+        "locations" : [ {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/ql/src/",
+          "description" : {
+            "text" : "The QL pack root directory."
+          }
+        }, {
+          "uri" : "file:///C:/dev/apps/codeql/codeql-repo/java/ql/src/qlpack.yml",
+          "description" : {
+            "text" : "The QL pack definition file."
+          }
+        } ]
+      } ]
+    },
+    "artifacts" : [ {
+      "location" : {
+        "uri" : "Module1/src/main/java/org/test/Adapter.java",
+        "uriBaseId" : "%SRCROOT%",
+        "index" : 6
+      }
+    }, {
+      "location" : {
+        "uri" : "Module1/src/main/java/org/test/Adapter2.java",
+        "uriBaseId" : "%SRCROOT%",
+        "index" : 7
+      }
+    }, {
+      "location" : {
+        "uri" : "Module2/src/gen/java/org/test/MyDto.java",
+        "uriBaseId" : "%SRCROOT%",
+        "index" : 8
+      }
+    } ],
+    "results" : [ {
+      "ruleId" : "java/missing-override-annotation",
+      "ruleIndex" : 0,
+      "message" : {
+        "text" : "This method overrides [TexteInterface.getText](1); it is advisable to add an Override annotation."
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "Module1/src/main/java/org/test/Adapter.java",
+            "uriBaseId" : "%SRCROOT%",
+            "index" : 2
+          },
+          "region" : {
+            "startLine" : 105,
+            "startColumn" : 17,
+            "endColumn" : 24
+          }
+        }
+      } ],
+      "partialFingerprints" : {
+        "primaryLocationLineHash" : "bbe36c1c0bd8283d:1",
+        "primaryLocationStartColumnFingerprint" : "14"
+      },
+      "relatedLocations" : [ {
+        "id" : 1,
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "file:/C:/dev/maven/repo/org/test/Interface.class",
+            "index" : 3
+          }
+        },
+        "message" : {
+          "text" : "Interface.getText"
+        }
+      } ]
+    }, {
+      "ruleId" : "java/missing-override-annotation",
+      "ruleIndex" : 0,
+      "message" : {
+        "text" : "This method overrides [TexteInterface.getTextZuCode](1); it is advisable to add an Override annotation."
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "Module1/src/main/java/org/test/Adapter2.java",
+            "uriBaseId" : "%SRCROOT%",
+            "index" : 2
+          },
+          "region" : {
+            "startLine" : 125,
+            "startColumn" : 17,
+            "endColumn" : 30
+          }
+        }
+      } ],
+      "partialFingerprints" : {
+        "primaryLocationLineHash" : "2ba33a77c2867bcc:1",
+        "primaryLocationStartColumnFingerprint" : "14"
+      },
+      "relatedLocations" : [ {
+        "id" : 1,
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "file:/C:/dev/maven/repo/org/test/Interface.class",
+            "index" : 3
+          }
+        },
+        "message" : {
+          "text" : "Interface.getInfo"
+        }
+      } ]
+    }, {
+      "ruleId" : "java/missing-override-annotation",
+      "ruleIndex" : 0,
+      "message" : {
+        "text" : "This method overrides [TexteInterface.getTextZuCode](1); it is advisable to add an Override annotation."
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "Module2/src/gen/java/org/test/MyDto.java",
+            "uriBaseId" : "%SRCROOT%",
+            "index" : 2
+          },
+          "region" : {
+            "startLine" : 156,
+            "startColumn" : 17,
+            "endColumn" : 30
+          }
+        }
+      } ],
+      "partialFingerprints" : {
+        "primaryLocationLineHash" : "59d077f101e0423f:1",
+        "primaryLocationStartColumnFingerprint" : "14"
+      },
+      "relatedLocations" : [ {
+        "id" : 1,
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "file:/C:/dev/maven/repo/org/test/Factory.class",
+            "index" : 3
+          }
+        },
+        "message" : {
+          "text" : "Factory.getDto"
+        }
+      } ]
+    } ]
+ }]
+}

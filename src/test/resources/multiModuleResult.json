@@ -1,0 +1,55 @@
+{
+  "issues": [
+    {
+      "engineId": "GitHub CodeQL v2.5.2",
+      "ruleId": "java/missing-override-annotation",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "This method overrides [TexteInterface.getText](1); it is advisable to add an Override annotation.",
+        "filePath": "src/main/java/org/test/Adapter.java",
+        "textRange": {
+          "startLine": 105,
+          "endLine": 105,
+          "startColumn": 17,
+          "endColumn": 24
+        }
+      },
+      "effortMinutes": 0
+    },
+    {
+      "engineId": "GitHub CodeQL v2.5.2",
+      "ruleId": "java/missing-override-annotation",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "This method overrides [TexteInterface.getTextZuCode](1); it is advisable to add an Override annotation.",
+        "filePath": "src/main/java/org/test/Adapter2.java",
+        "textRange": {
+          "startLine": 125,
+          "endLine": 125,
+          "startColumn": 17,
+          "endColumn": 30
+        }
+      },
+      "effortMinutes": 0
+    },
+    {
+      "engineId": "GitHub CodeQL v2.5.2",
+      "ruleId": "java/missing-override-annotation",
+      "severity": "INFO",
+      "type": "CODE_SMELL",
+      "primaryLocation": {
+        "message": "This method overrides [TexteInterface.getTextZuCode](1); it is advisable to add an Override annotation.",
+        "filePath": "src/gen/java/org/test/MyDto.java",
+        "textRange": {
+          "startLine": 156,
+          "endLine": 156,
+          "startColumn": 17,
+          "endColumn": 30
+        }
+      },
+      "effortMinutes": 0
+    }
+  ]
+}

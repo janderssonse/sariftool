@@ -1,0 +1,56 @@
+---
+
+# Configuration file for MegaLinter
+# See all available variables at https://oxsecurity.github.io/megalinter/configuration/ and in linters documentation
+
+APPLY_FIXES: none
+
+DISABLE_ERRORS: true
+SHOW_ELAPSED_TIME: true
+
+# Report options
+CLEAR_REPORT_FOLDER: true
+EMAIL_REPORTER: false
+TEXT_REPORTER: true
+SARIF_REPORTER: true
+GITHUB_COMMENT_REPORTER: false
+GITLAB_COMMENT_REPORTER: false
+UPDATED_SOURCES_REPORTER: true
+#REPORT_OUTPUT_FOLDER: false
+
+
+# Enabled Linters, followed by specific linter settings
+
+# ENABLE: # If you use ENABLE variable, all other languages/formats/tooling formats will be disabled by default
+# ENABLE_LINTERS: # If you use ENABLE_LINTERS variable, all other linters will be disabled by default
+ 
+ENABLE_LINTERS:
+  [
+    BASH_SHELLCHECK,
+    CSS_STYLELINT,
+    DOCKERFILE_HADOLINT,
+    REPOSITORY_GITLEAKS,
+    REPOSITORY_SECRETLINT,
+    JAVASCRIPT_PRETTIER,
+    JAVA_CHECKSTYLE,
+    JSON_PRETTIER,
+    MARKDOWN_MARKDOWN_LINT,
+    TEKTON_TEKTON_LINT,
+    TYPESCRIPT_PRETTIER,
+    YAML_PRETTIER,
+    XML_XMLLINT,
+  ]
+
+
+JAVA_CHECKSTYLE_FILTER_REGEX_INCLUDE: src/main
+
+JAVASCRIPT_DEFAULT_STYLE: prettier
+
+TYPESCRIPT_DEFAULT_STYLE: prettier
+
+
+POST_COMMANDS:
+  - command: mkdir sonarinput
+    cwd: "workspace"
+  - command: java -jar /sarifconvert.jar -i megalinter-reports/sarif -o sonarinput
+    cwd: "workspace"

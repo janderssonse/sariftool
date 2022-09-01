@@ -1,0 +1,337 @@
+{
+  "$schema" : "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version" : "2.1.0",
+  "runs" : [ {
+    "tool" : {
+      "driver" : {
+        "name" : "CodeQL",
+        "organization" : "GitHub",
+        "semanticVersion" : "2.3.3",
+        "rules" : [ {
+          "id" : "java/continue-in-false-loop",
+          "name" : "java/continue-in-false-loop",
+          "shortDescription" : {
+            "text" : "Continue statement that does not continue"
+          },
+          "fullDescription" : {
+            "text" : "A 'continue' statement only re-runs the loop if the loop-condition is true. Therefore using 'continue' in a loop with a constant false condition is misleading and usually a bug."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "correctness" ],
+            "kind" : "problem",
+            "precision" : "high",
+            "name" : "Continue statement that does not continue",
+            "description" : "A 'continue' statement only re-runs the loop if the\n              loop-condition is true. Therefore using 'continue' in a loop\n              with a constant false condition is misleading and usually a\n              bug.",
+            "id" : "java/continue-in-false-loop",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/empty-block",
+          "name" : "java/empty-block",
+          "shortDescription" : {
+            "text" : "Empty branch of conditional, or empty loop body"
+          },
+          "fullDescription" : {
+            "text" : "An undocumented empty block or statement hinders readability. It may also indicate incomplete code."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "reliability", "readability" ],
+            "kind" : "problem",
+            "precision" : "low",
+            "name" : "Empty branch of conditional, or empty loop body",
+            "description" : "An undocumented empty block or statement hinders readability. It may also\n              indicate incomplete code.",
+            "id" : "java/empty-block",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/empty-synchronized-block",
+          "name" : "java/empty-synchronized-block",
+          "shortDescription" : {
+            "text" : "Empty synchronized block"
+          },
+          "fullDescription" : {
+            "text" : "Empty synchronized blocks may indicate the presence of incomplete code or incorrect synchronization, and may lead to concurrency problems."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "reliability", "correctness", "concurrency", "language-features", "external/cwe/cwe-585" ],
+            "kind" : "problem",
+            "precision" : "low",
+            "name" : "Empty synchronized block",
+            "description" : "Empty synchronized blocks may indicate the presence of\n              incomplete code or incorrect synchronization, and may lead to concurrency problems.",
+            "id" : "java/empty-synchronized-block",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/impossible-array-cast",
+          "name" : "java/impossible-array-cast",
+          "shortDescription" : {
+            "text" : "Impossible array cast"
+          },
+          "fullDescription" : {
+            "text" : "Trying to cast an array of a particular type as an array of a subtype causes a 'ClassCastException' at runtime."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "properties" : {
+            "tags" : [ "reliability", "correctness", "logic", "external/cwe/cwe-704" ],
+            "kind" : "problem",
+            "precision" : "low",
+            "name" : "Impossible array cast",
+            "description" : "Trying to cast an array of a particular type as an array of a subtype causes a\n              'ClassCastException' at runtime.",
+            "id" : "java/impossible-array-cast",
+            "problem.severity" : "error"
+          }
+        }, {
+          "id" : "java/inconsistent-call-on-result",
+          "name" : "java/inconsistent-call-on-result",
+          "shortDescription" : {
+            "text" : "Inconsistent operation on return value"
+          },
+          "fullDescription" : {
+            "text" : "If the same operation is usually performed on the result of a method call, any cases where it is not performed may indicate resource leaks or other problems."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "reliability", "correctness", "external/cwe/cwe-252", "statistical", "non-attributable" ],
+            "kind" : "problem",
+            "precision" : "low",
+            "name" : "Inconsistent operation on return value",
+            "description" : "If the same operation is usually performed\n              on the result of a method call, any cases where it\n              is not performed may indicate resource leaks or other problems.",
+            "id" : "java/inconsistent-call-on-result",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/missing-case-in-switch",
+          "name" : "java/missing-case-in-switch",
+          "shortDescription" : {
+            "text" : "Missing enum case in switch"
+          },
+          "fullDescription" : {
+            "text" : "A 'switch' statement that is based on an 'enum' type and does not have cases for all the 'enum' constants is usually a coding mistake."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "reliability", "readability", "external/cwe/cwe-478" ],
+            "kind" : "problem",
+            "precision" : "medium",
+            "name" : "Missing enum case in switch",
+            "description" : "A 'switch' statement that is based on an 'enum' type and does not have cases for all\n              the 'enum' constants is usually a coding mistake.",
+            "id" : "java/missing-case-in-switch",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/unreachable-catch-clause",
+          "name" : "java/unreachable-catch-clause",
+          "shortDescription" : {
+            "text" : "Unreachable catch clause"
+          },
+          "fullDescription" : {
+            "text" : "An unreachable 'catch' clause may indicate a mistake in exception handling or may be unnecessary."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "reliability", "correctness", "exceptions", "external/cwe/cwe-561" ],
+            "kind" : "problem",
+            "precision" : "high",
+            "name" : "Unreachable catch clause",
+            "description" : "An unreachable 'catch' clause may indicate a mistake in exception handling or may\n              be unnecessary.",
+            "id" : "java/unreachable-catch-clause",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/return-value-ignored",
+          "name" : "java/return-value-ignored",
+          "shortDescription" : {
+            "text" : "Method result ignored"
+          },
+          "fullDescription" : {
+            "text" : "If most of the calls to a method use the return value of that method, the calls that do not check the return value may be mistakes."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "reliability", "correctness", "external/cwe/cwe-252", "statistical", "non-attributable" ],
+            "kind" : "problem",
+            "precision" : "low",
+            "name" : "Method result ignored",
+            "description" : "If most of the calls to a method use the return value\n              of that method, the calls that do not check the return value may be mistakes.",
+            "id" : "java/return-value-ignored",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/static-field-written-by-instance",
+          "name" : "java/static-field-written-by-instance",
+          "shortDescription" : {
+            "text" : "Static field written by instance method"
+          },
+          "fullDescription" : {
+            "text" : "Writing to a static field from an instance method is prone to race conditions unless you use synchronization. In addition, it makes it difficult to keep the static state consistent and affects code readability."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "reliability", "maintainability" ],
+            "kind" : "problem",
+            "precision" : "low",
+            "name" : "Static field written by instance method",
+            "description" : "Writing to a static field from an instance method is prone to race conditions\n              unless you use synchronization. In addition, it makes it difficult to keep the\n              static state consistent and affects code readability.",
+            "id" : "java/static-field-written-by-instance",
+            "problem.severity" : "warning"
+          }
+        }, {
+          "id" : "java/misleading-indentation",
+          "name" : "java/misleading-indentation",
+          "shortDescription" : {
+            "text" : "Misleading indentation"
+          },
+          "fullDescription" : {
+            "text" : "If a control structure does not use braces, misleading indentation makes it difficult to see which statements are within its scope."
+          },
+          "defaultConfiguration" : { },
+          "properties" : {
+            "tags" : [ "maintainability", "correctness", "logic" ],
+            "kind" : "problem",
+            "precision" : "very-high",
+            "name" : "Misleading indentation",
+            "description" : "If a control structure does not use braces, misleading indentation makes it\n              difficult to see which statements are within its scope.",
+            "id" : "java/misleading-indentation",
+            "problem.severity" : "warning"
+          }
+        } ]
+      }
+    },
+    "artifacts" : [ {
+      "location" : {
+        "uri" : "src/main/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+        "uriBaseId" : "%SRCROOT%",
+        "index" : 0
+      }
+    } ],
+    "results" : [ {
+      "ruleId" : "java/misleading-indentation",
+      "ruleIndex" : 9,
+      "message" : {
+        "text" : "Indentation suggests that [the next statement](1) belongs to [the control structure](2), but this is not the case; consider adding braces or adjusting indentation."
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+            "uriBaseId" : "%SRCROOT%",
+            "index" : 0
+          },
+          "region" : {
+            "startLine" : 26,
+            "startColumn" : 9,
+            "endColumn" : 13
+          }
+        }
+      } ],
+      "partialFingerprints" : {
+        "primaryLocationLineHash" : "e0946c8d7d5e9de3:1",
+        "primaryLocationStartColumnFingerprint" : "0"
+      },
+      "relatedLocations" : [ {
+        "id" : 1,
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+            "uriBaseId" : "%SRCROOT%",
+            "index" : 0
+          },
+          "region" : {
+            "startLine" : 27,
+            "startColumn" : 9,
+            "endColumn" : 13
+          }
+        },
+        "message" : {
+          "text" : "the next statement"
+        }
+      }, {
+        "id" : 2,
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+            "uriBaseId" : "%SRCROOT%",
+            "index" : 0
+          },
+          "region" : {
+            "startLine" : 25,
+            "startColumn" : 5,
+            "endColumn" : 13
+          }
+        },
+        "message" : {
+          "text" : "the control structure"
+        }
+      } ]
+    },
+    {
+          "ruleId" : "java/impossible-array-cast",
+          "ruleIndex" : 2,
+          "message" : {
+            "text" : "Any text related to that rule"
+          },
+          "locations" : [ {
+            "physicalLocation" : {
+              "artifactLocation" : {
+                "uri" : "src/test/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+                "uriBaseId" : "%SRCROOT%",
+                "index" : 0
+              },
+              "region" : {
+                "startLine" : 26,
+                "startColumn" : 9,
+                "endColumn" : 13
+              }
+            }
+          } ],
+          "partialFingerprints" : {
+            "primaryLocationLineHash" : "e0946c8d7d5e9de3:1",
+            "primaryLocationStartColumnFingerprint" : "0"
+          },
+          "relatedLocations" : [ {
+            "id" : 1,
+            "physicalLocation" : {
+              "artifactLocation" : {
+                "uri" : "src/test/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+                "uriBaseId" : "%SRCROOT%",
+                "index" : 0
+              },
+              "region" : {
+                "startLine" : 27,
+                "startColumn" : 9,
+                "endColumn" : 13
+              }
+            },
+            "message" : {
+              "text" : "the next statement"
+            }
+          }, {
+            "id" : 2,
+            "physicalLocation" : {
+              "artifactLocation" : {
+                "uri" : "src/test/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+                "uriBaseId" : "%SRCROOT%",
+                "index" : 0
+              },
+              "region" : {
+                "startLine" : 25,
+                "startColumn" : 5,
+                "endColumn" : 13
+              }
+            },
+            "message" : {
+              "text" : "the control structure"
+            }
+          } ]
+        } ],
+    "columnKind" : "utf16CodeUnits",
+    "properties" : {
+      "semmle.formatSpecifier" : "sarif-latest"
+    }
+  } ]
+}
