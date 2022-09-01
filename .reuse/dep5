@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: sarifconvert
+Upstream-Contact: Josef Andersson <josef.andersson@gmail.com>
+Source: https://github.com/janderssonse/sarifconvert
+
+Files: *.sarif
+Copyright: 2022 Josef Andersson
+License: CC0-1.0
+

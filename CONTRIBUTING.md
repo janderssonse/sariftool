@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2021 Baloise Group
+SPDX-FileCopyrightText: 2022 Josef Andersson
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Contributing to _SarifConvert_
 
 **Thank you for your interest in _SarifConvert_. Your contributions are highly welcome.**

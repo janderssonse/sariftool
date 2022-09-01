@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Baloise Group
+# SPDX-FileCopyrightText: 2022 Josef Andersson
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # Compiled class file
 *.class
 
@@ -37,3 +42,7 @@ hs_err_pid*
 
 .vscode
 .tool-versions
+IND
+OUTD
+megalinter-reports/
+sonarinput

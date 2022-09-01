@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2021 Baloise Group
+// SPDX-FileCopyrightText: 2022 Josef Andersson
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package se.janderssonse.sarifconvert.cli;
 
 import org.junit.jupiter.api.Disabled;
