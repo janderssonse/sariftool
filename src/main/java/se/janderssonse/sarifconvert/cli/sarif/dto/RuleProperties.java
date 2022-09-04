@@ -5,33 +5,31 @@
 
 package se.janderssonse.sarifconvert.cli.sarif.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import java.util.Arrays;
+import org.immutables.value.Value;
 
-@Getter
-@Setter
-@Builder(toBuilder = true)
-public class RuleProperties {
+@Value.Immutable
+public abstract class RuleProperties {
 
-  private String id;
-  private String name;
-  private String description;
-  private String[] tags;
-  private String kind;
-  private String precision;
-  private Severity severity;
+  public abstract Optional<String> id();
+  public abstract Optional<String> name();
+  public abstract Optional<String> description();
+  public abstract Optional<ArrayList<String>> tags();
+  public abstract Optional<String> kind();
+  public abstract Optional<String> precision();
+  public abstract Optional<Severity> severity();
 
   @Override
   public String toString() {
     return "RuleProperties{" +
-            "id='" + id + '\'' +
-            ", tags=" + Arrays.toString(tags) +
-            ", kind='" + kind + '\'' +
-            ", precision='" + precision + '\'' +
-            ", severity=" + severity +
+            "id='" + id().orElse("") + '\'' +
+            ", tags=" + tags().orElse(new ArrayList<>(List.of(""))) +
+            ", kind='" + kind().orElse("") + '\'' +
+            ", precision='" + precision().orElse("") + '\'' +
+            ", severity=" + severity().orElse(null) +
             '}';
   }
 

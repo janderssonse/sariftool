@@ -6,18 +6,20 @@
 package se.janderssonse.sarifconvert.cli.sarif;
 
 import se.janderssonse.sarifconvert.cli.sarif.dto.Driver;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Result;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableDriver;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableResult;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRule;
 import se.janderssonse.sarifconvert.cli.sarif.dto.Rule;
 
 public interface ParserCallback {
 
-  void onFinding(Result result);
+  void onFinding(ImmutableResult result);
 
   void onVersion(String version);
 
   void onSchema(String schema);
 
-  void onDriver(Driver driver);
+  void onDriver(ImmutableDriver driver);
 
-  void onRule(Rule rule);
+  void onRule(ImmutableRule rule);
 }

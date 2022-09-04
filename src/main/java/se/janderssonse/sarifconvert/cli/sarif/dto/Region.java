@@ -5,24 +5,24 @@
 
 package se.janderssonse.sarifconvert.cli.sarif.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Optional;
 
-@Getter
-@Setter
-@Builder(toBuilder = true)
-public class Region {
+import org.immutables.value.Value;
 
-  @Builder.Default
-  private Integer startLine = 0;
-  @Builder.Default
-  private Integer startColumn = 0;
-  @Builder.Default
-  private Integer endColumn = 0;
+@Value.Immutable
+public abstract class Region {
 
-  @Override
+  @Value.Default
+  public  Integer startLine() {
+    return 0;
+  }
+  
+  public  abstract Optional<Integer>  startColumn();
+  
+  public  abstract Optional<Integer> endColumn();
+
+ 
   public String toString() {
-    return String.format("Line %d, Column %d%s", startLine, startColumn, endColumn != null && endColumn > 0 ? ":" + endColumn : "");
+    return String.format("Line %d, Column %d%s", startLine(), startColumn().orElse(0), endColumn().orElse(0) > 0 ? ":" + endColumn().get() : "");
   }
 }

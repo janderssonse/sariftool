@@ -17,20 +17,20 @@ class ResultTest extends PropertyReflectionTest {
 
   @Test
   void verifyProperties() {
-    assertNumberOfProperties(Result.class, 4);
+    assertNumberOfProperties(ImmutableResult.class, 4);
   }
 
   @Test
   void verifyStringOutput() {
-    final Result testee = Result.builder().build();
-    assertEquals("Found issue based on rule 'null': 'null'", testee.toString());
-    testee.setRuleId("MyRuleId/x");
-    assertEquals("Found issue based on rule 'MyRuleId/x': 'null'", testee.toString());
-    testee.setMessage("To test the message setter/getter");
+    ImmutableResult testee = ImmutableResult.builder().build();
+    assertEquals("Found issue based on rule 'N/A': 'N/A'", testee.toString());
+    testee = ImmutableResult.builder().from(testee).ruleId("MyRuleId/x").build();
+    assertEquals("Found issue based on rule 'MyRuleId/x': 'N/A'", testee.toString());
+    testee = ImmutableResult.builder().from(testee).message("To test the message setter/getter").build();
     assertEquals("Found issue based on rule 'MyRuleId/x': 'To test the message setter/getter'", testee.toString());
-    testee.setLocations(Collections.emptyList());
+    testee = ImmutableResult.builder().from(testee).locations(Collections.emptyList()).build();
     assertEquals("Found issue based on rule 'MyRuleId/x': 'To test the message setter/getter'", testee.toString());
-    testee.setLocations(Collections.singletonList(Location.builder().build()));
+    testee = ImmutableResult.builder().from(testee).locations(Collections.singletonList(ImmutableLocation.builder().build())).build();
     assertEquals("Found issue based on rule 'MyRuleId/x': 'To test the message setter/getter'\nin '<URI_MISSING>, n/a'", testee.toString());
   }
 

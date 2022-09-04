@@ -11,24 +11,32 @@ import se.janderssonse.sarifconvert.cli.PropertyReflectionTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Optional;
-
 class RegionTest extends PropertyReflectionTest {
 
   @Test
   void verifyProperties() {
-    assertNumberOfProperties(Region.class, 3);
+    assertNumberOfProperties(ImmutableRegion.class, 3);
   }
 
   @Test
   void verifyStringOutput() {
-    final Region testee = Region.builder().build();
+
+    Region testee = ImmutableRegion.builder()
+        .build();
+
     assertEquals("Line 0, Column 0", testee.toString());
-    testee.setStartLine(75);
+    testee = ImmutableRegion.builder()
+        .from(testee)
+        .startLine(75).build();
     assertEquals("Line 75, Column 0", testee.toString());
-    testee.setStartColumn(9);
+    testee = ImmutableRegion.builder()
+        .from(testee)
+        .startColumn(9)
+        .build();
     assertEquals("Line 75, Column 9", testee.toString());
-    testee.setEndColumn(14);
+    testee = ImmutableRegion.builder()
+        .from(testee)
+        .endColumn(14).build();
     assertEquals("Line 75, Column 9:14", testee.toString());
   }
 

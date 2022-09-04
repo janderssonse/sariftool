@@ -9,10 +9,10 @@ package se.janderssonse.sarifconvert.cli;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import lombok.Setter;
 import se.janderssonse.sarifconvert.cli.sarif.ConsoleParser;
 import se.janderssonse.sarifconvert.cli.sarif.SarifParser;
 import se.janderssonse.sarifconvert.cli.sonar.SonarIssueMapper;
+import se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableSonarLocation;
 import se.janderssonse.sarifconvert.cli.sonar.dto.Issues;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -45,8 +45,11 @@ public class SonarIssueReporter {
   //@Parameter(property = "codeql2sonar.sarif.path.excludes")
   private String[] pathExlcudes;
 
-  @Setter
   private Writer writer;
+
+  public void setWriter(Writer writer) {
+    this.writer = writer;
+  }
 
   public SonarIssueReporter(String sarifInputFile) {
     this.sarifInputFile = sarifInputFile;
@@ -93,7 +96,7 @@ public class SonarIssueReporter {
 
     sonarIssueMapper.getMappedIssues(null).getResult().forEach(issue -> {
       //process each mapped issue
-      final String filePath = issue.getPrimaryLocation().getFilePath();
+      final String filePath = issue.primaryLocation().get().filePath();
       srcDirPom.stream()
           .map(s -> s.split("/")[0] + "/") // consider only first folder (e.g., src/) in order to capture generated folders also
           // if filepath contains dir but does not start with it, it seems to be prefixed by module name
@@ -102,7 +105,7 @@ public class SonarIssueReporter {
             // remove module name
             final String replacedPath = filePath.substring(filePath.indexOf("/" + path2Fix) + 1);
             LOGGER.log(Level.FINE,String.format("Replace '%s' with '%s'", filePath, replacedPath));
-            issue.getPrimaryLocation().setFilePath(replacedPath);
+            issue.withPrimaryLocation(ImmutableSonarLocation.builder().from(issue.primaryLocation().get()).filePath(replacedPath).build());
           });
     });
   }
@@ -155,16 +158,16 @@ public class SonarIssueReporter {
 
   private File readSarifFile(String sarifInputFile) throws Exception {
     if (StringUtils.isBlank(sarifInputFile)) {
-      throw new RuntimeException("No Sarif file provided. " + ERR_FILE_SUFFIX);
+      throw new FileNotFoundException("No Sarif file provided. " + ERR_FILE_SUFFIX);
     }
 
-    LOGGER.info("read " + sarifInputFile);
+    LOGGER.fine("read " + sarifInputFile);
     final File result = new File(sarifInputFile);
 
     if (!result.isFile()) {
-      throw new RuntimeException(String.format("Specified path is not a valid file: '%s'. %s", sarifInputFile, ERR_FILE_SUFFIX));
+      throw new FileNotFoundException(String.format("Specified path is not a valid file: '%s'. %s", sarifInputFile, ERR_FILE_SUFFIX));
     } else if (!result.canRead()) {
-      throw new RuntimeException(String.format("Specified file is not readable: '%s'. %s", sarifInputFile, ERR_FILE_SUFFIX));
+      throw new IOException(String.format("Specified file is not readable: '%s'. %s", sarifInputFile, ERR_FILE_SUFFIX));
     }
 
     return validate(result);

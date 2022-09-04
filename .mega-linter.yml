@@ -1,8 +1,3 @@
-# SPDX-FileCopyrightText: 2021 Baloise Group
-# SPDX-FileCopyrightText: 2022 Josef Andersson
-#
-# SPDX-License-Identifier: Apache-2.0
-
 ---
 
 # Configuration file for MegaLinter
@@ -39,7 +34,7 @@ ENABLE_LINTERS:
     JAVASCRIPT_PRETTIER,
     JAVA_CHECKSTYLE,
     JSON_PRETTIER,
-    MARKDOWN_MARKDOWN_LINT,
+    MARKODNW_MARKDOWN_LINT,
     TEKTON_TEKTON_LINT,
     TYPESCRIPT_PRETTIER,
     YAML_PRETTIER,

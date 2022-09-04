@@ -13,7 +13,7 @@ class TextRangeTest extends PropertyReflectionTest {
 
   @Test
   void verifyProperties() {
-    assertNumberOfProperties(TextRange.class, 4);
+    assertNumberOfProperties(ImmutableTextRange.class, 4);
   }
 
 }

@@ -5,20 +5,12 @@
 
 package se.janderssonse.sarifconvert.cli;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,8 +30,8 @@ class SonarIssueReporterTest {
     assertTrue(input.isFile());
 
     final SonarIssueReporter testee = new SonarIssueReporter(input.getAbsolutePath());
-    final Exception mojoExecutionException = assertThrows(Exception.class, testee::execute);
-    assertTrue(mojoExecutionException.getMessage().startsWith("$schema not found in root object"));
+    final Exception exception = assertThrows(Exception.class, testee::execute);
+    assertTrue(exception.getMessage().startsWith("$schema not found in root object"));
   }
 
 

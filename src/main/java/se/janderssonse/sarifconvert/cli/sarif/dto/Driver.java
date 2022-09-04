@@ -5,25 +5,23 @@
 
 package se.janderssonse.sarifconvert.cli.sarif.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
+import org.immutables.value.Value;
 
-@Getter
-@Setter
-@Builder(toBuilder = true)
-public class Driver {
+@Value.Immutable
+public abstract class Driver {
 
-  private String name;
-  private String organization;
-  private String semanticVersion;
+  public abstract Optional<String> name();
+  public abstract Optional<String> organization();
+  public abstract Optional<String> semanticVersion();
 
   @Override
   public String toString() {
     return String.format("%s %s %s",
-            organization==null ? "n/a" : organization,
-            name == null ? "n/a" : name,
-            StringUtils.isBlank(semanticVersion) ? "" : "v" + semanticVersion).trim();
+            organization().isEmpty() ? "n/a" : organization().get(),
+            name().isEmpty() ? "n/a" : name().get(),
+            StringUtils.isBlank(semanticVersion().orElse("")) ? "" : "v" + semanticVersion().get()).trim();
   }
 }

@@ -5,38 +5,55 @@
 
 package se.janderssonse.sarifconvert.cli.sonar;
 
-import lombok.Getter;
 import se.janderssonse.sarifconvert.cli.sarif.ParserCallback;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Driver;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Region;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Result;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Rule;
-import se.janderssonse.sarifconvert.cli.sarif.dto.RuleProperties;
-import se.janderssonse.sarifconvert.cli.sonar.dto.Issue;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableDriver;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableLocation;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRegion;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableResult;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRule;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRuleProperties;
 import se.janderssonse.sarifconvert.cli.sonar.dto.Issues;
-import se.janderssonse.sarifconvert.cli.sonar.dto.Location;
-import se.janderssonse.sarifconvert.cli.sonar.dto.TextRange;
+import se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableIssue;
+import se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableSonarLocation;
+import se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableTextRange;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+
 public class SonarIssueMapper implements ParserCallback {
 
-  private final ArrayList<Result> results = new ArrayList<>();
-  private final ArrayList<Rule> rules = new ArrayList<>();
+  private final List<ImmutableResult> results = new ArrayList<>();
+  private  List<ImmutableRule> rules = new ArrayList<>();
   private final Issues mappedIssues = new Issues();
-  private Driver driver;
-  @Getter
+  private ImmutableDriver driver;
+  public void setRules(List<ImmutableRule> rules) {
+    this.rules = rules;
+  }
+
+  public void setDriver(ImmutableDriver driver) {
+    this.driver = driver;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public String getSchema() {
+    return schema;
+  }
+
   private String version;
-  @Getter
   private String schema;
 
   @Override
-  public void onFinding(Result result) {
+  public void onFinding(ImmutableResult result) {
+    // To do check if result valid¨
     if (result != null) {
       results.add(result);
       mappedIssues.getResult().add(mapResult(result));
@@ -54,47 +71,52 @@ public class SonarIssueMapper implements ParserCallback {
   }
 
   @Override
-  public void onDriver(Driver driver) {
+  public void onDriver(ImmutableDriver driver) {
     this.driver = driver;
   }
 
   @Override
-  public void onRule(Rule rule) {
+  public void onRule(ImmutableRule rule) {
     rules.add(rule);
   }
 
-  private Issue mapResult(Result result) {
-    final Issue.Severity severity = mapSeverity(result.getRuleId());
-    return Issue.builder()
-        .ruleId(result.getRuleId())
+  public void finding(ImmutableResult result) {
+    this.onFinding(result);
+  }
+
+  private ImmutableIssue mapResult(ImmutableResult result) {
+    final ImmutableIssue.Severity severity = mapSeverity(result.ruleId().get());
+    return ImmutableIssue.builder()
+        .ruleId(result.ruleId().get())
         .primaryLocation(mapPrimaryLocation(result))
         .secondaryLocations(mapSecondaryLocations(result))
         .severity(severity)
         .type(mapType(severity))
+        .effortMinutes(0)
         .engineId(driver != null ? driver.toString() : SonarIssueMapper.class.getSimpleName())
         .build();
   }
 
-  Issue.Severity mapSeverity(String ruleId) {
-    final Rule matchingRule = rules.stream().filter(rule -> rule.getId().equals(ruleId)).findFirst().orElse(null);
-    if (matchingRule != null && matchingRule.getProperties().getSeverity() != null) {
-      return mapRuleToIssueSeverity(matchingRule.getLevel(), matchingRule.getProperties());
+  ImmutableIssue.Severity mapSeverity(String ruleId) {
+    final ImmutableRule matchingRule = rules.stream().filter(rule -> rule.id().get().equals(ruleId)).findFirst().orElse(null);
+    if (matchingRule != null && matchingRule.properties().get().severity().isPresent()) {
+      return mapRuleToIssueSeverity(matchingRule.level().orElse(null), matchingRule.properties());
     }
-    return Issue.Severity.INFO;
+    return ImmutableIssue.Severity.INFO;
   }
 
-  Issue.Severity mapRuleToIssueSeverity(final Rule.Level level, final RuleProperties properties) {
-    if (properties == null || properties.getSeverity() == null) {
+  ImmutableIssue.Severity mapRuleToIssueSeverity(final ImmutableRule.Level level, final Optional<ImmutableRuleProperties> properties) {
+    if (properties.isEmpty() || properties.get().severity().isEmpty()) {
       // without properties the only basis to map severity is the rule level.
       return (level == null) ? null : mapRuleLevelToSeverity(level);
     }
 
-    final RuleProperties.Severity ruleSeverity = properties.getSeverity();
-    final String rulePrecision = properties.getPrecision();
+    final ImmutableRuleProperties.Severity ruleSeverity = properties.get().severity().get();
+    final Optional<String> rulePrecision = properties.get().precision();
 
     switch (ruleSeverity) {
       case recommendation:
-        return Issue.Severity.INFO;
+        return ImmutableIssue.Severity.INFO;
       case warning:
         // consider precision as first criteria
         return mapRuleSeverityWarning(level, rulePrecision);
@@ -106,57 +128,57 @@ public class SonarIssueMapper implements ParserCallback {
     return null;
   }
 
-  private Issue.Severity mapRuleSeverityError(Rule.Level level, String rulePrecision) {
-    if (rulePrecision != null) {
-      switch (rulePrecision.toLowerCase()) {
+  private ImmutableIssue.Severity mapRuleSeverityError(ImmutableRule.Level level, Optional<String> rulePrecision) {
+    if (rulePrecision.isPresent()) {
+      switch (rulePrecision.get().toLowerCase()) {
         case "medium":
         case "high":
-          return Issue.Severity.CRITICAL;
+          return ImmutableIssue.Severity.CRITICAL;
         case "very-high":
-          return Issue.Severity.BLOCKER;
+          return ImmutableIssue.Severity.BLOCKER;
         default:
           // not decisive yet
       }
     }
     // if not set or unknown consider level as second criteria
-    if (level == Rule.Level.ERROR) {
-      return Issue.Severity.BLOCKER;
+    if (level == ImmutableRule.Level.ERROR) {
+      return ImmutableIssue.Severity.BLOCKER;
     }
-    return Issue.Severity.CRITICAL;
+    return ImmutableIssue.Severity.CRITICAL;
   }
 
-  private Issue.Severity mapRuleSeverityWarning(Rule.Level level, String rulePrecision) {
-    if (rulePrecision != null) {
-      switch (rulePrecision.toLowerCase()) {
+  private ImmutableIssue.Severity mapRuleSeverityWarning(ImmutableRule.Level level, Optional<String> rulePrecision) {
+    if (rulePrecision.isPresent()) {
+      switch (rulePrecision.get().toLowerCase()) {
         case "medium":
-          return Issue.Severity.MINOR;
+          return ImmutableIssue.Severity.MINOR;
         case "high":
-          return Issue.Severity.MAJOR;
+          return ImmutableIssue.Severity.MAJOR;
         case "very-high":
-          return Issue.Severity.CRITICAL;
+          return ImmutableIssue.Severity.CRITICAL;
         default:
           // not decisive yet
       }
     }
     // if not set or unknown consider level as second criteria
-    return (level == null) ? Issue.Severity.MINOR : mapRuleLevelToSeverity(level);
+    return (level == null) ? ImmutableIssue.Severity.MINOR : mapRuleLevelToSeverity(level);
   }
 
-  private Issue.Severity mapRuleLevelToSeverity(Rule.Level level) {
+  private ImmutableIssue.Severity mapRuleLevelToSeverity(ImmutableRule.Level level) {
     switch (level) {
       case NONE:
       case NOTE:
-        return Issue.Severity.MINOR;
+        return ImmutableIssue.Severity.MINOR;
       case WARNING:
-        return Issue.Severity.MAJOR;
+        return ImmutableIssue.Severity.MAJOR;
       case ERROR:
-        return Issue.Severity.CRITICAL;
+        return ImmutableIssue.Severity.CRITICAL;
       default:
         return null;
     }
   }
 
-  Issue.Type mapType(Issue.Severity severity) {
+  ImmutableIssue.Type mapType(ImmutableIssue.Severity severity) {
     if (severity == null) {
       return null;
     }
@@ -164,49 +186,62 @@ public class SonarIssueMapper implements ParserCallback {
       case INFO:
       case MINOR:
       case MAJOR:
-        return Issue.Type.CODE_SMELL;
+        return ImmutableIssue.Type.CODE_SMELL;
       case BLOCKER:
-        return Issue.Type.BUG;
+        return ImmutableIssue.Type.BUG;
       case CRITICAL:
       default:
-        return Issue.Type.VULNERABILITY;
+        return ImmutableIssue.Type.VULNERABILITY;
     }
   }
 
-  Set<Location> mapSecondaryLocations(Result result) {
-    final List<se.janderssonse.sarifconvert.cli.sarif.dto.Location> locations = result.getLocations();
-    if (locations == null || locations.size() < 2) {
-      return null;
+  Optional<Set<ImmutableSonarLocation>> mapSecondaryLocations(ImmutableResult result) {
+    final Optional<List<ImmutableLocation>> locations = result.locations();
+    if (locations.isEmpty() || locations.get().size() < 2) {
+      return Optional.empty();
     }
-    return locations.stream().skip(1).map(location -> mapLocation(location, result.getMessage()))
-        .collect(Collectors.toSet());
+    return Optional.of(locations.get().stream().skip(1).map(location -> mapLocation(location, result.message().get()))
+        .collect(Collectors.toSet()));
   }
 
-  Location mapPrimaryLocation(Result result) {
-    final List<se.janderssonse.sarifconvert.cli.sarif.dto.Location> locations = result.getLocations();
-    if (locations == null || locations.isEmpty()) {
-      return null;
+  Optional<ImmutableSonarLocation> mapPrimaryLocation(ImmutableResult result) {
+    final Optional<List<ImmutableLocation>> locations = result.locations();
+    if (locations.isEmpty() || locations.get().isEmpty()) {
+      return Optional.empty();
     }
-    return mapLocation(locations.get(0), result.getMessage());
+    return Optional.of(mapLocation(locations.get().get(0), result.message().get()));
   }
 
-  private Location mapLocation(se.janderssonse.sarifconvert.cli.sarif.dto.Location location, String message) {
-    return Location.builder()
-        .filePath(location.getUri())
+  private ImmutableSonarLocation mapLocation(ImmutableLocation location, String message) {
+
+    final List<String> srcDirPom = List.of("src/");
+
+     Optional<String> st = srcDirPom.stream()
+          .map(s -> s.split("/")[0] + "/") // consider only first folder (e.g., src/) in order to capture generated folders also
+          // if filepath contains dir but does not start with it, it seems to be prefixed by module name
+          .filter(srcDirFilter -> !location.uri().startsWith(srcDirFilter) && location.uri().contains(srcDirFilter)).findFirst();
+         
+          String newPath = location.uri();
+          if(st.isPresent()) {
+            // remove module name
+            newPath = location.uri().substring(location.uri().indexOf("/" + st.get()) + 1);
+          };
+    return ImmutableSonarLocation.builder()
+        .filePath(newPath)
         .message(message)
-        .textRange(mapTextRange(location.getRegion()))
+        .textRange(mapTextRange(location.region().get()))
         .build();
   }
 
-  private TextRange mapTextRange(Region region) {
+  private ImmutableTextRange mapTextRange(ImmutableRegion region) {
     if (region == null) {
       return null;
     }
-    return TextRange.builder()
-        .startLine(region.getStartLine())
-        .endLine(region.getStartLine())
-        .startColumn(region.getStartColumn())
-        .endColumn(region.getEndColumn())
+    return ImmutableTextRange.builder()
+        .startLine(region.startLine())
+        .endLine(region.startLine())
+        .startColumn(region.startColumn())
+        .endColumn(region.endColumn())
         .build();
   }
 
@@ -221,12 +256,12 @@ public class SonarIssueMapper implements ParserCallback {
         : mappedIssues;
   }
 
-  private boolean isMatchingExlusionPattern(Issue issue, String[] patternsToExclude) {
-    final Location primaryLocation = issue.getPrimaryLocation();
-    if (primaryLocation == null) {
+  private boolean isMatchingExlusionPattern(ImmutableIssue issue, String[] patternsToExclude) {
+    final Optional<ImmutableSonarLocation> primaryLocation = issue.primaryLocation();
+    if (primaryLocation.isEmpty()) {
       return false;
     }
-    final String filePath = primaryLocation.getFilePath();
+    final String filePath = primaryLocation.get().filePath();
     return Arrays.stream(patternsToExclude)
         .anyMatch(
             pattern -> Pattern.compile(".*" + pattern + ".*", Pattern.CASE_INSENSITIVE).matcher(filePath).matches());

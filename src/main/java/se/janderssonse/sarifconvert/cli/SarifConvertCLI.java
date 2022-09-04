@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2022 Josef Andersson
 //
 // SPDX-License-Identifier: Apache-2.0
-
 package se.janderssonse.sarifconvert.cli;
 
 import java.io.File;
@@ -25,17 +24,15 @@ import com.google.gson.GsonBuilder;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import se.janderssonse.sarifconvert.cli.sarif.ParserCallback;
+import se.janderssonse.sarifconvert.cli.sarif.ConsoleParser;
 import se.janderssonse.sarifconvert.cli.sarif.SarifParser;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Driver;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Result;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Rule;
 import se.janderssonse.sarifconvert.cli.sonar.SonarIssueMapper;
 
 @Command(name = "sarifconvert", mixinStandardHelpOptions = true, version = "sarifconvert 0.1", description = "Convert SARIF format to other formats")
-public class SarifConvert implements Callable<Integer> {
+public class SarifConvertCLI implements Callable<Integer> {
 
-    static Logger LOGGER = Logger.getLogger(SarifConvert.class.getName());
+    static Logger LOGGER = Logger.getLogger(SarifConvertCLI.class.getName());
+
     @Option(names = { "-i", "--inputdir" }, description = "/path/to/dir/with/sarif/file(s)/")
     private Path inputDir = Paths.get(".");
 
@@ -56,7 +53,7 @@ public class SarifConvert implements Callable<Integer> {
                 final SonarIssueMapper sonarIssueMapper = new SonarIssueMapper();
 
                 LOGGER.info("Converting: ".concat(sarifFile.getAbsolutePath()));
-                SarifParser.execute(sarifFile, logParser, sonarIssueMapper);
+                SarifParser.execute(sarifFile, new ConsoleParser(), sonarIssueMapper);
                 LOGGER.info(sonarIssueMapper.getSummary());
 
                 final StringWriter stringWriter = new StringWriter();
@@ -81,7 +78,7 @@ public class SarifConvert implements Callable<Integer> {
     }
 
     public static void main(String... args) {
-        int exitCode = new CommandLine(new SarifConvert()).execute(args);
+        int exitCode = new CommandLine(new SarifConvertCLI()).execute(args);
         System.exit(exitCode);
     }
 
@@ -109,32 +106,4 @@ public class SarifConvert implements Callable<Integer> {
             return Collections.EMPTY_LIST;
         }
     }
-
-    private static ParserCallback logParser = new ParserCallback() {
-        @Override
-        public void onFinding(Result result) {
-            LOGGER.info(result.toString());
-        }
-
-        @Override
-        public void onVersion(String version) {
-            LOGGER.info(version);
-        }
-
-        @Override
-        public void onSchema(String schema) {
-            LOGGER.info(schema);
-        }
-
-        @Override
-        public void onDriver(Driver driver) {
-            LOGGER.info(driver.toString());
-        }
-
-        @Override
-        public void onRule(Rule rule) {
-            LOGGER.info(rule.toString());
-        }
-    };
-
 }

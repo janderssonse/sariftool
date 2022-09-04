@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 public final class Issues {
 
   @SerializedName(value = "issues")
-  private final List<Issue> result = new ArrayList<>();
+  private final List<ImmutableIssue> result = new ArrayList<>();
 
-  public List<Issue> getResult() {
+  public List<ImmutableIssue> getResult() {
     return result;
   }
 
-  public Issues applyFilter(Predicate<Issue> predicate) {
+  public Issues applyFilter(Predicate<ImmutableIssue> predicate) {
     final Issues filteredIssues = new Issues();
     filteredIssues.getResult().addAll(this.getResult().stream().filter(predicate).collect(Collectors.toList()));
     return filteredIssues;

@@ -15,21 +15,23 @@ class RuleTest extends PropertyReflectionTest {
 
   @Test
   void verifyProperties() {
-    assertNumberOfProperties(Rule.class, 6);
+    assertNumberOfProperties(ImmutableRule.class, 6);
   }
 
   @Test
   void verifyStringOutput() {
-    final Rule testee = Rule.builder().build();
-    assertEquals("Rule[null]: 'null'; null", testee.toString());
-    testee.setId("MyTestId");
-    assertEquals("Rule[MyTestId]: 'null'; null", testee.toString());
-    testee.setLevel(Rule.Level.WARNING);
-    assertEquals("Rule[MyTestId]-WARNING: 'null'; null", testee.toString());
-    testee.setName("DaRulezName");
-    assertEquals("Rule[MyTestId]-WARNING: 'DaRulezName'; null", testee.toString());
-    testee.setProperties(RuleProperties.builder().build());
-    assertEquals("Rule[MyTestId]-WARNING: 'DaRulezName'; RuleProperties{id='null', tags=null, kind='null', precision='null', severity=null}", testee.toString());
+    ImmutableRule testee = ImmutableRule.builder().build();
+    assertEquals("Rule[N/A]: 'N/A'; N/A", testee.toString());
+    testee = ImmutableRule.builder().from(testee).id("MyTestId").build();
+    assertEquals("Rule[MyTestId]: 'N/A'; N/A", testee.toString());
+    testee = ImmutableRule.builder().from(testee).level(Rule.Level.WARNING).build();
+    assertEquals("Rule[MyTestId]-WARNING: 'N/A'; N/A", testee.toString());
+    testee = ImmutableRule.builder().from(testee).name("DaRulezName").build();
+    assertEquals("Rule[MyTestId]-WARNING: 'DaRulezName'; N/A", testee.toString());
+    testee = ImmutableRule.builder().from(testee).properties(ImmutableRuleProperties.builder().build()).build();
+    assertEquals(
+        "Rule[MyTestId]-WARNING: 'DaRulezName'; RuleProperties{id='', tags=[], kind='', precision='', severity=null}",
+        testee.toString());
   }
 
   @Test

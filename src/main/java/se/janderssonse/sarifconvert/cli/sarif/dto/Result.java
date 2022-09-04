@@ -5,27 +5,24 @@
 
 package se.janderssonse.sarifconvert.cli.sarif.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
+import java.util.Optional;
 
-@Getter
-@Setter
-@Builder(toBuilder = true)
-public class Result {
+import org.immutables.value.Value;
 
-  private String ruleId;
-  private Integer ruleIndex;
-  private String message;
-  private List<Location> locations;
+@Value.Immutable
+public abstract class Result {
+
+  public abstract Optional<String> ruleId();
+  public abstract Optional<Integer> ruleIndex();
+  public abstract Optional<String> message();
+  public abstract Optional<List<ImmutableLocation>> locations();
 
   @Override
   public String toString() {
-    String result = String.format("Found issue based on rule '%s': '%s'", ruleId, message);
-    if (locations != null && !locations.isEmpty()) {
-      result += "\nin '" + locations.get(0).toString() + "'";
+    String result = String.format("Found issue based on rule '%s': '%s'", ruleId().orElse("N/A"), message().orElse("N/A"));
+    if (locations().isPresent() && !locations().get().isEmpty()) {
+      result += "\nin '" + locations().get().get(0).toString() + "'";
     }
     return result;
   }

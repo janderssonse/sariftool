@@ -5,16 +5,13 @@
 
 package se.janderssonse.sarifconvert.cli.sonar.dto;
 
-import java.util.Optional;
-
 import org.immutables.value.Value;
 
 @Value.Immutable
-public abstract class TextRange {
+public abstract class SonarLocation {
 
-  public abstract Integer startLine();
-  public abstract Integer endLine();
-  public abstract Optional<Integer> startColumn();
-  public abstract Optional<Integer> endColumn();
+  public abstract String message();
+  public abstract String filePath();
+  public abstract ImmutableTextRange textRange();
 
 }

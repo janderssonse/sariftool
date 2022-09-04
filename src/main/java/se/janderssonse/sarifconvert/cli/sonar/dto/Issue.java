@@ -5,10 +5,10 @@
 
 package se.janderssonse.sarifconvert.cli.sonar.dto;
 
-import lombok.Builder;
-import lombok.Data;
-
+import java.util.Optional;
 import java.util.Set;
+
+import org.immutables.value.Value;
 
 /**
  * This class represents the structure of sonar's generic issue import format
@@ -16,17 +16,17 @@ import java.util.Set;
  * - https://docs.sonarqube.org/latest/analysis/generic-issue/
  * - https://docs.sonarqube.org/latest/user-guide/issues/
  */
-@Data
-@Builder(toBuilder = true)
-public class Issue {
+@Value.Immutable
+@Value.Modifiable
+public abstract class Issue {
 
-  private String engineId;
-  private String ruleId;
-  private Severity severity;
-  private Type type;
-  private Location primaryLocation;
-  private Set<Location> secondaryLocations;
-  private int effortMinutes;
+  public abstract Optional<String> engineId();
+  public abstract Optional<String> ruleId();
+  public abstract Optional<Severity> severity();
+  public abstract Optional<Type> type();
+  public abstract Optional<ImmutableSonarLocation> primaryLocation();
+  public abstract Optional<Set<ImmutableSonarLocation>> secondaryLocations();
+  public abstract Optional<Integer> effortMinutes();
 
   public enum Severity {
     /**

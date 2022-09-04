@@ -10,7 +10,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import se.janderssonse.sarifconvert.cli.sarif.dto.Driver;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableDriver;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableLocation;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRegion;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableResult;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRule;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRuleProperties;
 import se.janderssonse.sarifconvert.cli.sarif.dto.Location;
 import se.janderssonse.sarifconvert.cli.sarif.dto.Region;
 import se.janderssonse.sarifconvert.cli.sarif.dto.Result;
@@ -21,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.StackWalker.Option;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -73,30 +79,35 @@ public class SarifParser {
   /**
    * Entry point to parse provided SarifFile. Expected file should be of schema
    * https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json
-   * and contains at least the runs element. For the result handling multiple
+   * For the result handling multiple
    * callback handler implementing
    * the @{@link ParserCallback} can be provided.
    *
    * @throws FileNotFoundException when sarifInputFile is not present
    */
-  public static void execute(File sarifInputFile, ParserCallback... callback) throws IOException,FileNotFoundException {
+  public static void execute(File sarifInputFile, ParserCallback... callback)
+      throws IOException, FileNotFoundException {
 
     try (final FileReader reader = new FileReader(sarifInputFile)) {
+
       final JsonObject rootObject = JsonParser.parseReader(reader).getAsJsonObject();
 
-      if (rootObject.has(ELEMENT_VERSION)) {
-        final String version = getObjectAsStringIfExists(rootObject, SarifParser.ELEMENT_VERSION);
-        Arrays.stream(callback).forEach(cb -> cb.onVersion(version));
-      }
+      if (validate(rootObject, sarifInputFile)) {
 
-      if (rootObject.has(ELEMENT_SCHEMA)) {
-        final String schema = getObjectAsStringIfExists(rootObject, SarifParser.ELEMENT_SCHEMA);
-        Arrays.stream(callback).forEach(cb -> cb.onSchema(schema));
-      }
+        if (rootObject.has(ELEMENT_VERSION)) {
+          final String version = getObjectAsStringIfExists(rootObject, SarifParser.ELEMENT_VERSION);
+          Arrays.stream(callback).forEach(cb -> cb.onVersion(version));
+        }
 
-      if (rootObject.has(ELEMENT_RUNS)) {
-        for (JsonElement singleRun : rootObject.get(ELEMENT_RUNS).getAsJsonArray()) {
-          parseRun(singleRun.getAsJsonObject(), callback);
+        if (rootObject.has(ELEMENT_SCHEMA)) {
+          final String schema = getObjectAsStringIfExists(rootObject, SarifParser.ELEMENT_SCHEMA);
+          Arrays.stream(callback).forEach(cb -> cb.onSchema(schema));
+        }
+
+        if (rootObject.has(ELEMENT_RUNS)) {
+          for (JsonElement singleRun : rootObject.get(ELEMENT_RUNS).getAsJsonArray()) {
+            parseRun(singleRun.getAsJsonObject(), callback);
+          }
         }
       }
     }
@@ -113,7 +124,7 @@ public class SarifParser {
 
       if (toolObject.has(ELEMENT_DRIVER)) {
         final JsonObject driver = toolObject.get(ELEMENT_DRIVER).getAsJsonObject();
-        final Driver driverDto = parseDriver(driver);
+        final ImmutableDriver driverDto = parseDriver(driver);
         Arrays.stream(callback).forEach(cb -> cb.onDriver(driverDto));
 
         if (driver != null && driver.has(ELEMENT_RULES)) {
@@ -136,7 +147,7 @@ public class SarifParser {
   private static void processRules(JsonArray rulesArray, ParserCallback[] callback) {
     rulesArray.forEach(rule -> {
       final JsonObject jsonObjectRule = rule.getAsJsonObject();
-      final Rule ruleDto = Rule.builder()
+      final ImmutableRule ruleDto = ImmutableRule.builder()
           .id(getObjectAsStringIfExists(jsonObjectRule, ELEMENT_ID))
           .name(getObjectAsStringIfExists(jsonObjectRule, ELEMENT_NAME))
           .shortDescription(getTextElement(jsonObjectRule, ELEMENT_SHORT_DESCRIPTION))
@@ -148,41 +159,41 @@ public class SarifParser {
     });
   }
 
-  private static Driver parseDriver(JsonObject driver) {
+  private static ImmutableDriver parseDriver(JsonObject driver) {
     if (driver == null) {
       return null;
     }
-    return Driver.builder()
+    return ImmutableDriver.builder()
         .name(getObjectAsStringIfExists(driver, ELEMENT_NAME))
-        .organization(getObjectAsStringIfExists(driver, ELEMENT_ORGANIZATION))
+        .organization(getObjectIfExists(driver, ELEMENT_ORGANIZATION))
         .semanticVersion(getObjectAsStringIfExists(driver, ELEMENT_SEMANTIC_VERSION))
         .build();
   }
 
-  private static Rule.Level parseDefaultConfigLevel(JsonObject jsonObjectRule) {
+  private static Optional<ImmutableRule.Level> parseDefaultConfigLevel(JsonObject jsonObjectRule) {
     if (jsonObjectRule.has(ELEMENT_DEFAULT_CONFIGURATION)) {
       final JsonObject defaultConfig = jsonObjectRule.get(ELEMENT_DEFAULT_CONFIGURATION).getAsJsonObject();
       if (defaultConfig.has(ELEMENT_LEVEL)) {
-        final String levelAsString = getObjectAsStringIfExists(defaultConfig, ELEMENT_LEVEL);
+        final Optional<String> levelAsString = getObjectIfExists(defaultConfig, ELEMENT_LEVEL);
         try {
-          return levelAsString == null ? null : Rule.Level.valueOf(levelAsString.toUpperCase(Locale.ROOT));
+          return levelAsString.isEmpty() ? Optional.empty() : Optional.of(ImmutableRule.Level.valueOf(levelAsString.get().toUpperCase(Locale.ROOT)));
         } catch (IllegalArgumentException e) {
           LOGGER.warning(String.format("Failed to interpret %s as Rule.Level: %s", levelAsString, e.getMessage()));
         }
       }
     }
-    return null;
+    return Optional.empty();
   }
 
-  private static RuleProperties parseRuleProperties(JsonObject jsonObjectRule) {
+  private static ImmutableRuleProperties parseRuleProperties(JsonObject jsonObjectRule) {
     if (jsonObjectRule.has(ELEMENT_PROPERTIES)) {
       final JsonObject properties = jsonObjectRule.get(ELEMENT_PROPERTIES).getAsJsonObject();
-      return RuleProperties.builder()
-          .id(getObjectAsStringIfExists(properties, ELEMENT_ID))
-          .name(getObjectAsStringIfExists(properties, ELEMENT_NAME))
-          .description(getObjectAsStringIfExists(properties, ELEMENT_DESCRIPTION))
-          .kind(getObjectAsStringIfExists(properties, ELEMENT_KIND))
-          .precision(getObjectAsStringIfExists(properties, ELEMENT_PRECISION))
+      return ImmutableRuleProperties.builder()
+          .id(getObjectIfExists(properties, ELEMENT_ID))
+          .name(getObjectIfExists(properties, ELEMENT_NAME))
+          .description(getObjectIfExists(properties, ELEMENT_DESCRIPTION))
+          .kind(getObjectIfExists(properties, ELEMENT_KIND))
+          .precision(getObjectIfExists(properties, ELEMENT_PRECISION))
           .tags(parseTags(properties))
           .severity(parseProblemSeverity(properties))
           .build();
@@ -194,48 +205,60 @@ public class SarifParser {
     return jsonObject != null && jsonObject.has(elementId) ? jsonObject.get(elementId).getAsString() : null;
   }
 
+  private static Optional<String> getObjectIfExists(JsonObject jsonObject, String elementId) {
+    return jsonObject != null && jsonObject.has(elementId) ? Optional.of(jsonObject.get(elementId).getAsString())
+        : Optional.empty();
+  }
+
+  private static Optional<Integer> getObjectIntIfExists(JsonObject jsonObject, String elementId) {
+    return jsonObject != null && jsonObject.has(elementId) ? Optional.of(jsonObject.get(elementId).getAsInt())
+        : Optional.empty();
+  }
+
   private static Integer getObjectAsIntegerIfExists(JsonObject jsonObject, String elementId) {
     return jsonObject != null && jsonObject.has(elementId) ? jsonObject.get(elementId).getAsInt() : null;
   }
 
-  private static RuleProperties.Severity parseProblemSeverity(JsonObject properties) {
+  private static Optional<ImmutableRuleProperties.Severity> parseProblemSeverity(JsonObject properties) {
     if (properties.has(ELEMENT_PROBLEM_SEVERITY)) {
-      final String severityAsString = getObjectAsStringIfExists(properties, ELEMENT_PROBLEM_SEVERITY);
+      final Optional<String> severityAsString = getObjectIfExists(properties, ELEMENT_PROBLEM_SEVERITY);
       try {
-        return RuleProperties.Severity.valueOf(severityAsString);
+        return Optional.of(ImmutableRuleProperties.Severity.valueOf(severityAsString.orElse("")));
       } catch (IllegalArgumentException e) {
         LOGGER.warning(
-            String.format("Failed to interpret %s as RuleProperties.Severity: %s", severityAsString, e.getMessage()));
+            String.format("Failed to interpret %s as RuleProperties.Severity: %s", severityAsString.orElse(""), e.getMessage()));
       }
     }
-    return null;
+    return Optional.empty();
   }
 
-  private static String[] parseTags(JsonObject properties) {
+  private static ArrayList<String> parseTags(JsonObject properties) {
     final HashSet<String> result = new HashSet<>();
     if (properties.has(ELEMENT_TAGS)) {
       properties.get(ELEMENT_TAGS).getAsJsonArray().forEach(t -> result.add(t.getAsString()));
     }
-    return result.toArray(new String[0]);
+    return new ArrayList<>(result);
   }
 
   private static void parseResults(JsonObject run, ParserCallback[] callback) {
     if (run.has(ELEMENT_RESULTS)) {
       run.get(ELEMENT_RESULTS).getAsJsonArray().forEach(result -> {
         final JsonObject resultJsonObject = result.getAsJsonObject();
-        final Result resultDto = Result.builder()
+        final ImmutableResult.Builder resultDto = ImmutableResult.builder()
             .ruleId(getObjectAsStringIfExists(resultJsonObject, ELEMENT_RULE_ID))
-            .ruleIndex(getObjectAsIntegerIfExists(resultJsonObject, ELEMENT_RULE_INDEX))
             .message(getTextElement(resultJsonObject, ELEMENT_MESSAGE))
-            .locations(parseLocations(resultJsonObject))
-            .build();
+            .locations(parseLocations(resultJsonObject));
 
-        if (resultDto.getRuleIndex() == null && resultJsonObject.has(ELEMENT_RULE)) {
-          resultDto
-              .setRuleIndex(getObjectAsIntegerIfExists(resultJsonObject.getAsJsonObject(ELEMENT_RULE), ELEMENT_INDEX));
+        Optional<Integer> resultIndex = getObjectIntIfExists(resultJsonObject, ELEMENT_RULE_INDEX);
+        if (resultIndex.isEmpty() && resultJsonObject.has(ELEMENT_RULE)) {
+          resultDto.ruleIndex(getObjectIntIfExists(resultJsonObject
+              .getAsJsonObject(ELEMENT_RULE), ELEMENT_INDEX));
+        } else {
+          resultDto.ruleIndex(resultIndex);
         }
+        ImmutableResult a = resultDto.build();
 
-        Arrays.stream(callback).forEach(cb -> cb.onFinding(resultDto));
+        Arrays.stream(callback).forEach(cb -> cb.onFinding(resultDto.build()));
       });
     }
   }
@@ -244,8 +267,8 @@ public class SarifParser {
     return getObjectAsStringIfExists(object.get(parentProperty).getAsJsonObject(), ELEMENT_TEXT);
   }
 
-  private static List<Location> parseLocations(JsonObject resultJsonObject) {
-    final ArrayList<Location> result = new ArrayList<>();
+  private static List<ImmutableLocation> parseLocations(JsonObject resultJsonObject) {
+    final ArrayList<ImmutableLocation> result = new ArrayList<>();
 
     if (resultJsonObject.has(ELEMENT_LOCATIONS)) {
 
@@ -257,10 +280,10 @@ public class SarifParser {
         if (locationJsonObject.has(ELEMENT_PHYSICAL_LOCATION)) {
           final JsonObject physicalLocation = locationJsonObject.get(ELEMENT_PHYSICAL_LOCATION).getAsJsonObject();
           final JsonObject artifactLocation = physicalLocation.get(ELEMENT_ARTIFACT_LOCATION).getAsJsonObject();
-          result.add(Location.builder()
+          result.add(ImmutableLocation.builder()
               .uri(getObjectAsStringIfExists(artifactLocation, ELEMENT_URI))
-              .uriBaseId(getObjectAsStringIfExists(artifactLocation, ELEMENT_URI_BASE_ID))
-              .index(getObjectAsIntegerIfExists(artifactLocation, ELEMENT_INDEX))
+              .uriBaseId(getObjectIfExists(artifactLocation, ELEMENT_URI_BASE_ID))
+              .index(getObjectIntIfExists(artifactLocation, ELEMENT_INDEX))
               .region(parseRegion(physicalLocation.get(ELEMENT_REGION).getAsJsonObject()))
               .build());
         }
@@ -269,11 +292,25 @@ public class SarifParser {
     return result;
   }
 
-  private static Region parseRegion(JsonObject region) {
-    return Region.builder()
+  private static ImmutableRegion parseRegion(JsonObject region) {
+    return ImmutableRegion.builder()
         .startLine(getObjectAsIntegerIfExists(region, ELEMENT_START_LINE))
-        .startColumn(getObjectAsIntegerIfExists(region, ELEMENT_START_COLUMN))
-        .endColumn(getObjectAsIntegerIfExists(region, ELEMENT_END_COLUMN))
+        .startColumn(getObjectIntIfExists(region, ELEMENT_START_COLUMN))
+        .endColumn(getObjectIntIfExists(region, ELEMENT_END_COLUMN))
         .build();
+  }
+
+  /*
+   * Todo: Currently this is wrong - a minimal ok SARIF file is actuallly
+   * resources/minimalValidSarifLogFileK1.sarif, taken
+   * from the official examples.
+   */
+  private static Boolean validate(JsonObject rootObject, File sarifFile) {
+    if (!rootObject.has("$schema")) {
+      throw new IllegalArgumentException(
+          String.format("$schema not found in root object - provided file %s does not seem to be a valid sarif file",
+              sarifFile.getName()));
+    }
+    return true;
   }
 }

@@ -13,7 +13,7 @@ class LocationTest extends PropertyReflectionTest {
 
   @Test
   void verifyProperties() {
-    assertNumberOfProperties(Location.class, 3);
+    assertNumberOfProperties(ImmutableSonarLocation.class, 3);
   }
 
 }

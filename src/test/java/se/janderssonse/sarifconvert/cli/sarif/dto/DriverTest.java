@@ -15,18 +15,18 @@ class DriverTest extends PropertyReflectionTest {
 
   @Test
   void verifyProperties() {
-    assertNumberOfProperties(Driver.class, 3);
+    assertNumberOfProperties(ImmutableDriver.class, 3);
   }
 
   @Test
   void verifyStringOutput() {
-    final Driver testee = Driver.builder().build();
+    ImmutableDriver testee = ImmutableDriver.builder().build();
     assertEquals("n/a n/a", testee.toString());
-    testee.setOrganization("DriverOrg");
+    testee = ImmutableDriver.builder().from(testee).organization("DriverOrg").build();
     assertEquals("DriverOrg n/a", testee.toString());
-    testee.setName("DriverName");
+    testee = ImmutableDriver.builder().from(testee).name("DriverName").build();
     assertEquals("DriverOrg DriverName", testee.toString());
-    testee.setSemanticVersion("1.2.3");
+    testee = ImmutableDriver.builder().from(testee).semanticVersion("1.2.3").build();
     assertEquals("DriverOrg DriverName v1.2.3", testee.toString());
   }
 }

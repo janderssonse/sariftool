@@ -11,28 +11,31 @@ import se.janderssonse.sarifconvert.cli.PropertyReflectionTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class RulePropertiesTest extends PropertyReflectionTest {
 
   @Test
   void verifyProperties() {
-    assertNumberOfProperties(RuleProperties.class, 7);
+    assertNumberOfProperties(ImmutableRuleProperties.class, 7);
   }
 
   @Test
   void verifyStringOutput() {
-    final RuleProperties testee = RuleProperties.builder().build();
-    assertEquals("RuleProperties{id='null', tags=null, kind='null', precision='null', severity=null}", testee.toString());
-    testee.setId("MyFancyRuleId/xyz");
-    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=null, kind='null', precision='null', severity=null}", testee.toString());
-    testee.setTags(new String[]{"Tag1","Tag2"});
-    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1, Tag2], kind='null', precision='null', severity=null}", testee.toString());
-    testee.setTags(new String[]{"Tag1"});
-    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1], kind='null', precision='null', severity=null}", testee.toString());
-    testee.setKind("AnyKind");
-    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1], kind='AnyKind', precision='null', severity=null}", testee.toString());
-    testee.setPrecision("Precision1");
+    ImmutableRuleProperties testee = ImmutableRuleProperties.builder().build();
+    assertEquals("RuleProperties{id='', tags=[], kind='', precision='', severity=null}", testee.toString());
+    testee = ImmutableRuleProperties.builder().from(testee).id("MyFancyRuleId/xyz").build();
+    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[], kind='', precision='', severity=null}", testee.toString());
+    testee = ImmutableRuleProperties.builder().from(testee).tags(new ArrayList<>(List.of("Tag1","Tag2"))).build();
+    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1, Tag2], kind='', precision='', severity=null}", testee.toString());
+    testee = ImmutableRuleProperties.builder().from(testee).tags(new ArrayList<>(List.of("Tag1"))).build();
+    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1], kind='', precision='', severity=null}", testee.toString());
+    testee = ImmutableRuleProperties.builder().from(testee).kind("AnyKind").build();
+    assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1], kind='AnyKind', precision='', severity=null}", testee.toString());
+    testee = ImmutableRuleProperties.builder().from(testee).precision("Precision1").build();
     assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1], kind='AnyKind', precision='Precision1', severity=null}", testee.toString());
-    testee.setSeverity(RuleProperties.Severity.recommendation);
+    testee = ImmutableRuleProperties.builder().from(testee).severity(ImmutableRuleProperties.Severity.recommendation).build();
     assertEquals("RuleProperties{id='MyFancyRuleId/xyz', tags=[Tag1], kind='AnyKind', precision='Precision1', severity=recommendation}", testee.toString());
   }
 

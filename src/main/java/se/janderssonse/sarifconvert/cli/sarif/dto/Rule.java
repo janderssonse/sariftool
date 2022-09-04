@@ -5,28 +5,26 @@
 
 package se.janderssonse.sarifconvert.cli.sarif.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Optional;
 
-@Getter
-@Setter
-@Builder(toBuilder = true)
-public class Rule {
-  private String id;
-  private String name;
-  private String shortDescription;
-  private String fullDescription;
-  private Level level;
-  private RuleProperties properties;
+import org.immutables.value.Value;
+
+@Value.Immutable
+public abstract class Rule {
+  public abstract Optional<String> id();
+  public abstract Optional<String> name();
+  public abstract Optional<String> shortDescription();
+  public abstract Optional<String> fullDescription();
+  public abstract Optional<Level> level();
+  public abstract Optional<ImmutableRuleProperties> properties();
 
   @Override
   public String toString() {
     return String.format("Rule[%s]%s: '%s'; %s"
-            , id
-            , level != null ? "-" + level : ""
-            , name
-            , properties);
+            , id().orElse("N/A")
+            , level().isPresent() ? "-" + level().get() : ""
+            , name().orElse("N/A")
+            , properties().isPresent() ? properties().get() : "N/A");
   }
 
   public enum Level {

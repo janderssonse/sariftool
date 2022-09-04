@@ -9,15 +9,16 @@ package se.janderssonse.sarifconvert.cli.sarif;
 import java.util.logging.Logger;
 
 import se.janderssonse.sarifconvert.cli.sarif.dto.Driver;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Result;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Rule;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableDriver;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableResult;
+import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRule;
 
 public class ConsoleParser implements ParserCallback {
 
   static Logger logger = Logger.getLogger(ConsoleParser.class.getName());
 
   @Override
-  public void onFinding(Result result) {
+  public void onFinding(ImmutableResult result) {
     logger.fine(result.toString());
   }
 
@@ -32,12 +33,12 @@ public class ConsoleParser implements ParserCallback {
   }
 
   @Override
-  public void onDriver(Driver driver) {
+  public void onDriver(ImmutableDriver driver) {
     logger.fine("Driver: " + driver);
   }
 
   @Override
-  public void onRule(Rule rule) {
-    logger.fine(String.format("Processed rule[%s]: %s", rule.getId(), rule.getName() ));
+  public void onRule(ImmutableRule rule) {
+    logger.fine(String.format("Processed rule[%s]: %s", rule.id(), rule.name() ));
   }
 }

@@ -5,24 +5,24 @@
 
 package se.janderssonse.sarifconvert.cli.sarif.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Optional;
 
-@Getter
-@Setter
-@Builder(toBuilder = true)
-public class Location {
+import org.immutables.value.Value;
 
-  private String uri;
-  private String uriBaseId;
-  private Integer index;
-  private Region region;
+@Value.Immutable
+public abstract class Location {
+
+  @Value.Default
+  public String uri() {
+    return "";
+  }
+  public abstract Optional<String> uriBaseId();
+  public abstract Optional<Integer> index();
+  public abstract Optional<ImmutableRegion> region();
 
   @Override
   public String toString() {
-    return String.format("%s, %s"
-            , uri != null ? uri : "<URI_MISSING>"
-            , region != null ? region.toString() : "n/a");
+    return String.format("%s, %s", !uri().isEmpty() ? uri() : "<URI_MISSING>",
+        region().isPresent() ? region().get().toString() : "n/a");
   }
 }
