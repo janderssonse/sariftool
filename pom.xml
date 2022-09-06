@@ -17,6 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <picocli.version>4.6.3</picocli.version>
+    <immutables.version>2.9.1</immutables.version>
   </properties>
 
   <scm>
@@ -32,13 +33,17 @@
         <configuration>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
-
           <annotationProcessorPaths>
-            <path>
+            <dependency>
+              <groupId>org.immutables</groupId>
+              <artifactId>value</artifactId>
+              <version>${immutables.version}</version>
+            </dependency>
+            <dependency>
               <groupId>info.picocli</groupId>
               <artifactId>picocli-codegen</artifactId>
               <version>${picocli.version}</version>
-            </path>
+            </dependency>
           </annotationProcessorPaths>
           <compilerArgs>
             <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
@@ -112,7 +117,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M6</version>
+        <version>3.0.0-M7</version>
         <configuration>
           <argLine>${jacocoArgLine}</argLine>
           <reportsDirectory>${project.build.directory}/surefire</reportsDirectory>
@@ -135,94 +140,93 @@
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
-      <version>2.9.1</version>
-      <scope>provided</scope>
+      <version>${immutables.version}</version>
     </dependency>
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>gson</artifactId>
-      <version>2.9.1</version>
-      <!-- If you don't need runtime capabilities - make it compile-only
-  <scope>provided</scope>-->
-    </dependency>
+      <version>${immutables.version}</version>
+        <!-- If you don't need runtime capabilities - make it compile-only
+        <scope>provided</scope>-->
+      </dependency>
 
-    <dependency>
-      <groupId>info.picocli</groupId>
-      <artifactId>picocli</artifactId>
-      <version>${picocli.version}</version>
-    </dependency>
-    <!--<dependency>
-      <groupId>info.picocli</groupId>
-      <artifactId>picocli-codegen</artifactId>
-      <version>4.6.3</version>
-      <scope>provided</scope>
-    </dependency>-->
-    <!-- Test dependencies -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>4.6.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <version>4.6.1</version>
-      <scope>test</scope>
-    </dependency>
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>${picocli.version}</version>
+      </dependency>
+      <!--<dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli-codegen</artifactId>
+        <version>4.6.3</version>
+        <scope>provided</scope>
+      </dependency>-->
+      <!-- Test dependencies -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.8.2</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>4.6.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>4.6.1</version>
+        <scope>test</scope>
+      </dependency>
 
-  </dependencies>
+    </dependencies>
 
-  <!-- Used when generating a native image with graalvm i.e. mvn -Pnative package -->
-  <profiles>
-    <profile>
-      <id>native</id>
-      <activation>
-        <property>
-          <name>native</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.graalvm.buildtools</groupId>
-            <artifactId>native-maven-plugin</artifactId>
-            <extensions>true</extensions>
-            <executions>
-              <execution>
-                <id>build-native</id>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-                <phase>package</phase>
-              </execution>
-              <execution>
-                <id>release-native</id>
-                <goals>
-                  <goal>release</goal>
-                </goals>
-                <phase>release</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <imageName>sarifconvert-${project.version}</imageName>
-              <buildArgs>
-                <buildArg>--allow-incomplete-classpath</buildArg>
-                <buildArg>--no-fallback</buildArg>
-                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
-                <buildArg>--verbose</buildArg>
-              </buildArgs>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+    <!-- Used when generating a native image with graalvm i.e. mvn -Pnative package -->
+    <profiles>
+      <profile>
+        <id>native</id>
+        <activation>
+          <property>
+            <name>native</name>
+          </property>
+        </activation>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.graalvm.buildtools</groupId>
+              <artifactId>native-maven-plugin</artifactId>
+              <extensions>true</extensions>
+              <executions>
+                <execution>
+                  <id>build-native</id>
+                  <goals>
+                    <goal>build</goal>
+                  </goals>
+                  <phase>package</phase>
+                </execution>
+                <execution>
+                  <id>release-native</id>
+                  <goals>
+                    <goal>release</goal>
+                  </goals>
+                  <phase>release</phase>
+                </execution>
+              </executions>
+              <configuration>
+                <imageName>sarifconvert-${project.version}</imageName>
+                <buildArgs>
+                  <buildArg>--allow-incomplete-classpath</buildArg>
+                  <buildArg>--no-fallback</buildArg>
+                  <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                  <buildArg>--verbose</buildArg>
+                </buildArgs>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
 
-</project>
+  </project>
