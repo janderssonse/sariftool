@@ -1,0 +1,25 @@
+---
+name: sarifconvert workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dco:
+    uses: ./.github/workflows/dco.yml
+  commitlint:
+    uses: ./.github/workflows/commitlint.yml
+  license:
+    uses: ./.github/workflows/license.yml
+  lint:
+    uses: ./.github/workflows/lint.yml
+  repolint:
+    uses: ./.github/workflows/repolint.yml
+  test:
+    needs: [dco,commitlint,license,lint,repolint]
+    uses: ./.github/workflows/build.yml

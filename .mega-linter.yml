@@ -27,30 +27,18 @@ UPDATED_SOURCES_REPORTER: true
 ENABLE_LINTERS:
   [
     BASH_SHELLCHECK,
+    COPYPASTE,
     CSS_STYLELINT,
     DOCKERFILE_HADOLINT,
     REPOSITORY_GITLEAKS,
     REPOSITORY_SECRETLINT,
-    JAVASCRIPT_PRETTIER,
     JAVA_CHECKSTYLE,
     JSON_PRETTIER,
-    MARKODNW_MARKDOWN_LINT,
-    TEKTON_TEKTON_LINT,
-    TYPESCRIPT_PRETTIER,
+    MARKDOWN_MARKDOWN_LINT,
     YAML_PRETTIER,
     XML_XMLLINT,
   ]
 
-
 JAVA_CHECKSTYLE_FILTER_REGEX_INCLUDE: src/main
 
-JAVASCRIPT_DEFAULT_STYLE: prettier
-
-TYPESCRIPT_DEFAULT_STYLE: prettier
-
-
-POST_COMMANDS:
-  - command: mkdir sonarinput
-    cwd: "workspace"
-  - command: java -jar /sarifconvert.jar -i megalinter-reports/sarif -o sonarinput
-    cwd: "workspace"
+COPYPASTE_JSCPD_ARGUMENTS: --ignore "**/build/**","report","LICENSES",".idea/**" --threshold "10"
