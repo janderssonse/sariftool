@@ -1,0 +1,161 @@
+[
+{
+  "name":"java.lang.Object",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.nio.file.Path"
+},
+{
+  "name":"java.nio.file.Paths",
+  "methods":[{"name":"get","parameterTypes":["java.lang.String","java.lang.String[]"] }]
+},
+{
+  "name":"java.sql.Connection"
+},
+{
+  "name":"java.sql.Date"
+},
+{
+  "name":"java.sql.Driver"
+},
+{
+  "name":"java.sql.DriverManager",
+  "queriedMethods":[
+    {"name":"getConnection","parameterTypes":["java.lang.String"] }, 
+    {"name":"getDriver","parameterTypes":["java.lang.String"] }
+  ]
+},
+{
+  "name":"java.sql.Time",
+  "queriedMethods":[{"name":"<init>","parameterTypes":["long"] }]
+},
+{
+  "name":"java.sql.Timestamp",
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.time.Duration",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.Instant",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.LocalDate",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.LocalDateTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.LocalTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.MonthDay",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.OffsetDateTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.OffsetTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.Period",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.Year",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.YearMonth",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.ZoneId",
+  "queriedMethods":[{"name":"of","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.time.ZoneOffset",
+  "queriedMethods":[{"name":"of","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.time.ZonedDateTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"picocli.CommandLine$AutoHelpMixin",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[
+    {"name":"helpRequested"}, 
+    {"name":"versionRequested"}
+  ]
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.SarifConvertCLI",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true,
+  "fields":[
+    {"name":"inputDir"}, 
+    {"name":"outputDir"}, 
+    {"name":"targetFormat"}
+  ]
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableIssue",
+  "allDeclaredFields":true
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableSonarLocation",
+  "allDeclaredFields":true
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableTextRange",
+  "allDeclaredFields":true
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issue",
+  "allDeclaredFields":true
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issue$Severity",
+  "allDeclaredFields":true
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issue$Type",
+  "allDeclaredFields":true
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issues",
+  "allDeclaredFields":true,
+  "queriedMethods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.SonarLocation",
+  "allDeclaredFields":true
+},
+{
+  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.TextRange",
+  "allDeclaredFields":true
+},
+{
+  "name":"sun.misc.Unsafe",
+  "fields":[{"name":"theUnsafe"}],
+  "queriedMethods":[{"name":"allocateInstance","parameterTypes":["java.lang.Class"] }]
+}
+]

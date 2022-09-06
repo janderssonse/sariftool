@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import picocli.CommandLine.Help.ColorScheme;
+import picocli.CommandLine.Help.Ansi.Style;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -39,7 +42,7 @@ public class SarifConvertCLI implements Callable<Integer> {
     @Option(names = { "-o", "--outputdir" }, description = "/path/to/dir/for/output/")
     private Path outputDir = Paths.get(".");
 
-    @Option(names = { "-t", "--targetformat" }, description = "sonar")
+    @Option(names = { "-t", "--targetformat" }, description = "Only sonar atm (default)")
     private String targetFormat = "sonar";
 
     @Override
@@ -105,5 +108,17 @@ public class SarifConvertCLI implements Callable<Integer> {
             LOGGER.info("IO failed" + e.getMessage());
             return Collections.EMPTY_LIST;
         }
+    }
+
+ public static CommandLine.Help.ColorScheme getColorScheme() {
+        // see also CommandLine.Help.defaultColorScheme()
+        return new ColorScheme.Builder()
+                .commands(Style.bold, Style.underline) // combine multiple styles
+                .options(Style.fg_yellow) // yellow foreground color
+                .parameters(Style.fg_yellow)
+                .optionParams(Style.italic)
+                .errors(Style.fg_red, Style.bold)
+                .stackTraces(Style.italic)
+                .build();
     }
 }
