@@ -23,7 +23,8 @@ jobs:
         with:
           java-version: $
           distribution: 'adopt'
-      - name: Build with Maven
+      - name: Executable Maven wrapper
         if: contains(matrix.os, 'win') == false
         run: chmod +x ./mvnw
+      - name: Maven Package
         run: ./mvnw --batch-mode --update-snapshots --file pom.xml package
