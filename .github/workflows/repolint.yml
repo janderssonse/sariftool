@@ -16,4 +16,4 @@ jobs:
       - name: Run Repolinter
         uses: todogroup/repolinter-action@v1
         with:
-          config_file: /.repolint.yml
+          config_file: /configs/.repolinter.yml
