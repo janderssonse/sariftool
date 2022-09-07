@@ -2,6 +2,8 @@
 name: MegaLinter
 on: [workflow_call] # yamllint disable-line rule:truthy
 
+env:
+  MEGALINTER_CONFIG: /configs/mega-linter.yml
 jobs:
   megalinter:
     name: megalint
