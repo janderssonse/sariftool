@@ -1,4 +1,4 @@
-# SarifComvert
+# SarifConvert
 
 `sarifconvert` is a CLI tool for converting the standard SARIF format to other formats (currently only Sonar Custom Format). 
 
