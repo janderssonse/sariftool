@@ -16,6 +16,14 @@ rules:
           - LICENSE*
           - COPYING*
         nocase: true
+  reuse-license-dir-exists:
+    level: error
+    rule:
+      type: directory-existence
+      options:
+        globsAny:
+          - LICENSES
+        nocase: true
   readme-file-exists:
     level: error
     rule:

@@ -3,10 +3,10 @@ Upstream-Name: sarifconvert
 Upstream-Contact: Josef Andersson <josef.andersson@gmail.com>
 Source: https://github.com/janderssonse/sarifconvert
 
-Files: *.sarif *.json *.md *.yml *.xml
+Files: *.sarif *.json *.md *.yml *.xml *.js *.properties .gitignore *.adoc
 Copyright: 2022 Josef Andersson
 License: CC0-1.0
 
-Files: .gitignore
-Copyright: 2022 Josef Andersson
-License: CC0-1.0
+Files: mvnw mvnw.cmd
+Copyright: 2002–2022 The Apache Software Foundation
+License: Apache-2.0

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Josef Andersson
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package se.janderssonse.sarifconvert;
 import org.immutables.value.Value;
 import java.lang.annotation.RetentionPolicy;

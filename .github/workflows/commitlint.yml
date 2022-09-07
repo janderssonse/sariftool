@@ -21,8 +21,8 @@ jobs:
 
       - name: Commitlint Pull Requests
         if: github.event_name == 'pull_request'
-        run: commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+        run: commitlint --config configs/commitlint.config.js --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
       - name: Commitlint Master/Main
         if: github.ref_name == 'master' || github.ref_name == 'main'
-        run: commitlint --from HEAD~1 --to HEAD --verbose
+        run: commitlint --config configs/commitlint.config.js --from HEAD~1 --to HEAD --verbose

@@ -36,13 +36,13 @@ public class SarifConvertCLI implements Callable<Integer> {
 
     static Logger LOGGER = Logger.getLogger(SarifConvertCLI.class.getName());
 
-    @Option(names = { "-i", "--inputdir" }, description = "/path/to/dir/with/sarif/file(s)/")
+    @Option(names = { "-i", "--inputdir" }, description = "A /path/to/dir/with/sarif/file(s)/.")
     private Path inputDir = Paths.get(".");
 
-    @Option(names = { "-o", "--outputdir" }, description = "/path/to/dir/for/output/")
+    @Option(names = { "-o", "--outputdir" }, description = "A /path/to/dir/for/output/.")
     private Path outputDir = Paths.get(".");
 
-    @Option(names = { "-t", "--targetformat" }, description = "Only sonar atm (default)")
+    @Option(names = { "-t", "--targetformat" }, description = "Only sonar atm (default).")
     private String targetFormat = "sonar";
 
     @Override

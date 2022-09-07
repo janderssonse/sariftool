@@ -1,9 +1,14 @@
 /reports
+node_modules
+package-lock.json
+package.json
 # Compiled class file
 *.class
 
 # Log file
 *.log
+
+
 
 # BlueJ files
 *.ctxt
