@@ -5,11 +5,9 @@
 
 package se.janderssonse.sarifconvert.cli.sarif;
 
-import se.janderssonse.sarifconvert.cli.sarif.dto.Driver;
 import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableDriver;
 import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableResult;
 import se.janderssonse.sarifconvert.cli.sarif.dto.ImmutableRule;
-import se.janderssonse.sarifconvert.cli.sarif.dto.Rule;
 
 public interface ParserCallback {
 

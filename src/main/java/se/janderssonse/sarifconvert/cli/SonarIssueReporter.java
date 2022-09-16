@@ -5,6 +5,25 @@
 
 package se.janderssonse.sarifconvert.cli;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -15,34 +34,26 @@ import se.janderssonse.sarifconvert.cli.sonar.SonarIssueMapper;
 import se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableSonarLocation;
 import se.janderssonse.sarifconvert.cli.sonar.dto.Issues;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
 public class SonarIssueReporter {
 
-
   static Logger LOGGER = Logger.getLogger(SonarIssueReporter.class.getName());
-  
+
   private static final String ERR_FILE_SUFFIX = "Verify parameter codeql2sonar.sarif.inputfile in your pom.xml";
   private static final String DEFAULT_OURPUT_FILE = "./target/sonar/codeql2sonar.json";
   private static final String DEFAULT_IGNORE_TEST_FLAG = "false";
 
-  //@Parameter(property = "codeql2sonar.sarif.inputfile")
+  // @Parameter(property = "codeql2sonar.sarif.inputfile")
   private String sarifInputFile;
 
-  //@Parameter(property = "codeql2sonar.sarif.outputfile", defaultValue = DEFAULT_OURPUT_FILE)
+  // @Parameter(property = "codeql2sonar.sarif.outputfile", defaultValue =
+  // DEFAULT_OURPUT_FILE)
   private String target;
 
-  //@Parameter(property = "codeql2sonar.sarif.ignoreTests", defaultValue = DEFAULT_IGNORE_TEST_FLAG)
+  // @Parameter(property = "codeql2sonar.sarif.ignoreTests", defaultValue =
+  // DEFAULT_IGNORE_TEST_FLAG)
   private boolean ignoreTests;
 
-  //@Parameter(property = "codeql2sonar.sarif.path.excludes")
+  // @Parameter(property = "codeql2sonar.sarif.path.excludes")
   private String[] pathExlcudes;
 
   private Writer writer;
@@ -80,10 +91,10 @@ public class SonarIssueReporter {
       }
     } catch (Exception e) {
       final StackTraceElement[] stackTrace = e.getStackTrace();
-      final String errMsg = (stackTrace != null && stackTrace.length>0)
-                                ? e.getMessage() + System.lineSeparator() + stackTrace[0].toString()
-                                : e.getMessage();
-      LOGGER.log(Level.FINE,e.getMessage());
+      final String errMsg = (stackTrace != null && stackTrace.length > 0)
+          ? e.getMessage() + System.lineSeparator() + stackTrace[0].toString()
+          : e.getMessage();
+      LOGGER.log(Level.FINE, e.getMessage());
       throw new RuntimeException(errMsg);
     }
   }
@@ -92,21 +103,26 @@ public class SonarIssueReporter {
    * remove module prefix in filePath in case of multiModuleBuild
    */
   void correctPathes(SonarIssueMapper sonarIssueMapper) {
-    final List<String> srcDirPom = getSourceDirectoryFromPom(null);//getPluginContext());
+    final List<String> srcDirPom = getSourceDirectoryFromPom(null);// getPluginContext());
 
     sonarIssueMapper.getMappedIssues(null).getResult().forEach(issue -> {
-      //process each mapped issue
+      if(issue.primaryLocation().isPresent()) {
+      // process each mapped issue
       final String filePath = issue.primaryLocation().get().filePath();
       srcDirPom.stream()
-          .map(s -> s.split("/")[0] + "/") // consider only first folder (e.g., src/) in order to capture generated folders also
-          // if filepath contains dir but does not start with it, it seems to be prefixed by module name
+          .map(s -> s.split("/")[0] + "/") // consider only first folder (e.g., src/) in order to capture generated
+                                           // folders also
+          // if filepath contains dir but does not start with it, it seems to be prefixed
+          // by module name
           .filter(srcDirFilter -> !filePath.startsWith(srcDirFilter) && filePath.contains(srcDirFilter)).findFirst()
           .ifPresent(path2Fix -> {
             // remove module name
             final String replacedPath = filePath.substring(filePath.indexOf("/" + path2Fix) + 1);
-            LOGGER.log(Level.FINE,String.format("Replace '%s' with '%s'", filePath, replacedPath));
-            issue.withPrimaryLocation(ImmutableSonarLocation.builder().from(issue.primaryLocation().get()).filePath(replacedPath).build());
+            LOGGER.log(Level.FINE, String.format("Replace '%s' with '%s'", filePath, replacedPath));
+            issue.withPrimaryLocation(
+                ImmutableSonarLocation.builder().from(issue.primaryLocation().get()).filePath(replacedPath).build());
           });
+        }
     });
   }
 
@@ -117,20 +133,20 @@ public class SonarIssueReporter {
       return defaults;
     }
 
-//    final MavenProject project = (MavenProject) pluginContext.get("project");
+    // final MavenProject project = (MavenProject) pluginContext.get("project");
     final List<String> sourceRoots = new ArrayList<>();
- //   sourceRoots.addAll(project.getCompileSourceRoots());
-  //  sourceRoots.addAll(project.getTestCompileSourceRoots());
+    // sourceRoots.addAll(project.getCompileSourceRoots());
+    // sourceRoots.addAll(project.getTestCompileSourceRoots());
 
     if (sourceRoots.isEmpty()) {
       return defaults;
     }
 
-    final String absolutePath =  null; //project.getBasedir().getAbsolutePath() + File.separator;
+    final String absolutePath = null; // project.getBasedir().getAbsolutePath() + File.separator;
     return sourceRoots.stream()
-               .map(s -> s.replace(absolutePath, "").trim())
-               .map(s -> s.replace("\\", "/"))
-               .collect(Collectors.toList());
+        .map(s -> s.replace(absolutePath, "").trim())
+        .map(s -> s.replace("\\", "/"))
+        .collect(Collectors.toList());
   }
 
   private Writer getWriter() throws IOException {
@@ -139,7 +155,7 @@ public class SonarIssueReporter {
 
   private void writeResult(SonarIssueMapper sonarIssueMapper, Writer writer) throws IOException {
     final String[] patternsToExclude = getPatternsToExclude();
-    LOGGER.log(Level.FINE,"patterns to exclude: " + Arrays.toString(patternsToExclude));
+    LOGGER.log(Level.FINE, "patterns to exclude: " + Arrays.toString(patternsToExclude));
 
     final Issues mappedIssues = sonarIssueMapper.getMappedIssues(patternsToExclude);
     LOGGER.info(String.format("Writing target '%s' containing %d issues.", target, mappedIssues.getResult().size()));
@@ -150,7 +166,7 @@ public class SonarIssueReporter {
 
   private String[] getPatternsToExclude() {
     if (ignoreTests) {
-      final String[] testExclusion = {"src/test/"};
+      final String[] testExclusion = { "src/test/" };
       return pathExlcudes == null ? testExclusion : ArrayUtils.addAll(pathExlcudes, testExclusion);
     }
     return pathExlcudes;
@@ -165,7 +181,8 @@ public class SonarIssueReporter {
     final File result = new File(sarifInputFile);
 
     if (!result.isFile()) {
-      throw new FileNotFoundException(String.format("Specified path is not a valid file: '%s'. %s", sarifInputFile, ERR_FILE_SUFFIX));
+      throw new FileNotFoundException(
+          String.format("Specified path is not a valid file: '%s'. %s", sarifInputFile, ERR_FILE_SUFFIX));
     } else if (!result.canRead()) {
       throw new IOException(String.format("Specified file is not readable: '%s'. %s", sarifInputFile, ERR_FILE_SUFFIX));
     }
@@ -174,14 +191,7 @@ public class SonarIssueReporter {
   }
 
   private File validate(File sarifFile) {
-    try {
-      final JsonObject rootObject = JsonParser.parseReader(new FileReader(sarifInputFile)).getAsJsonObject();
-      if (!rootObject.has("$schema")) {
-        throw new RuntimeException(String.format("$schema not found in root object - provided file %s does not seem to be a valid sarif file", sarifFile.getName()));
-      }
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
     return sarifFile;
   }
+
 }

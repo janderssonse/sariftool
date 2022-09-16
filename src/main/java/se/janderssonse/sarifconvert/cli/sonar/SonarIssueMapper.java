@@ -99,7 +99,7 @@ public class SonarIssueMapper implements ParserCallback {
 
   ImmutableIssue.Severity mapSeverity(String ruleId) {
     final ImmutableRule matchingRule = rules.stream().filter(rule -> rule.id().get().equals(ruleId)).findFirst().orElse(null);
-    if (matchingRule != null && matchingRule.properties().get().severity().isPresent()) {
+    if (matchingRule != null && matchingRule.properties().isPresent() && matchingRule.properties().get().severity().isPresent()) {
       return mapRuleToIssueSeverity(matchingRule.level().orElse(null), matchingRule.properties());
     }
     return ImmutableIssue.Severity.INFO;
@@ -206,10 +206,11 @@ public class SonarIssueMapper implements ParserCallback {
 
   Optional<ImmutableSonarLocation> mapPrimaryLocation(ImmutableResult result) {
     final Optional<List<ImmutableLocation>> locations = result.locations();
-    if (locations.isEmpty() || locations.get().isEmpty()) {
+    if (locations.isEmpty() || locations.get().isEmpty() ) {
       return Optional.empty();
     }
-    return Optional.of(mapLocation(locations.get().get(0), result.message().get()));
+ImmutableLocation l = locations.get().get(0);
+    return Optional.of(mapLocation(l, result.message().orElse("REALLY?")));
   }
 
   private ImmutableSonarLocation mapLocation(ImmutableLocation location, String message) {

@@ -7,7 +7,6 @@ package se.janderssonse.sarifconvert.cli.sarif.dto;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -22,6 +21,6 @@ public abstract class Driver {
     return String.format("%s %s %s",
             organization().isEmpty() ? "n/a" : organization().get(),
             name().isEmpty() ? "n/a" : name().get(),
-            StringUtils.isBlank(semanticVersion().orElse("")) ? "" : "v" + semanticVersion().get()).trim();
+            semanticVersion().isEmpty() ? "n/a" : "v" + semanticVersion().get()).trim();
   }
 }
