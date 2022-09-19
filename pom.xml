@@ -172,8 +172,12 @@
   <artifactId>vertx-json-schema</artifactId>
   <version>4.3.3</version>
  </dependency>
- 
-
+ <dependency>
+  <groupId>de.dm.infrastructure</groupId>
+  <artifactId>log-capture</artifactId>
+  <version>3.5.0</version>
+  <scope>test</scope>
+</dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>

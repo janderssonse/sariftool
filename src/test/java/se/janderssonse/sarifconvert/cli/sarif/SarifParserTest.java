@@ -60,7 +60,7 @@ class SarifParserTest {
     final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
       SarifParser.execute(exampleSarifFile, mockedParserCB);
     });
-    assertTrue(exception.getMessage().startsWith("$schema not found in root object"));
+    assertTrue(exception.getMessage().startsWith("Validation failed:"));
 
     assertAll(
         () -> Mockito.verify(mockedParserCB, Mockito.never()).onFinding(ArgumentMatchers.any(ImmutableResult.class)),
@@ -86,7 +86,7 @@ class SarifParserTest {
         schemaCaptor.getValue());
 
     Mockito.verify(mockedParserCB, Mockito.times(1)).onDriver(driverCaptor.capture());
-    verifyDriver(driverCaptor.getValue(),"2.3.3");
+    verifyDriver(driverCaptor.getValue(), "2.3.3");
 
     Mockito.verify(mockedParserCB, Mockito.times(10)).onRule(ruleCaptor.capture());
     final List<ImmutableRule> rulesCaptured = ruleCaptor.getAllValues();
@@ -112,7 +112,7 @@ class SarifParserTest {
     assertNotNull(location.region());
     final Region region = location.region().get();
     assertEquals(26, region.startLine());
-    assertEquals(9, region. startColumn().get());
+    assertEquals(9, region.startColumn().get());
     assertEquals(13, region.endColumn().get());
   }
 

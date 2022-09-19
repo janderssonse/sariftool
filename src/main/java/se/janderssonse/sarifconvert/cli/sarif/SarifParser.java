@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -93,7 +94,7 @@ public class SarifParser {
    * @throws FileNotFoundException when sarifInputFile is not present
    */
   public static void execute(File sarifInputFile, ParserCallback... callback)
-      throws IOException, FileNotFoundException {
+      throws IOException, FileNotFoundException, IllegalArgumentException {
 
     try (final FileReader reader = new FileReader(sarifInputFile)) {
 
@@ -303,7 +304,7 @@ public class SarifParser {
         .build();
   }
 
-  private static boolean validate(File sarifFile) {
+  private static boolean validate(File sarifFile) throws IllegalArgumentException {
     try {
       InputStream s = SarifParser.class.getResourceAsStream("/sarif-json-schema.json");
 
@@ -315,13 +316,17 @@ public class SarifParser {
           schema,
           new JsonSchemaOptions().setDraft(Draft.DRAFT202012).setBaseUri("http://"))
           .validate(json);
-      LOGGER.info("validation " + result.toString());
+      LOGGER.fine("validation " + result.toString());
+      if (!result.getValid()) {
+        throw new IllegalArgumentException(
+            String.format("Validation failed: %s Err: %s ", sarifFile.getName(),
+                result.getErrors().stream().map(o -> o.toString()).collect(Collectors.joining("\n"))));
+      }
 
-    } catch (Exception e) {
-
-      LOGGER.info("validation failed" + e.getMessage());
-      return false;
+    } catch (IOException e) {
+      LOGGER.severe("validation failed" + e.getMessage());
     }
     return true;
   }
+
 }

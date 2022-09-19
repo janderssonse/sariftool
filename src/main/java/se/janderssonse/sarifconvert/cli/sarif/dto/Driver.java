@@ -21,6 +21,6 @@ public abstract class Driver {
     return String.format("%s %s %s",
             organization().isEmpty() ? "n/a" : organization().get(),
             name().isEmpty() ? "n/a" : name().get(),
-            semanticVersion().isEmpty() ? "n/a" : "v" + semanticVersion().get()).trim();
+            semanticVersion().isEmpty() ? "" : "v" + semanticVersion().get()).trim();
   }
 }
