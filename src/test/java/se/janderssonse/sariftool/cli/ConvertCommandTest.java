@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import de.dm.infrastructure.logcapture.LogCapture;
 import picocli.CommandLine;
 
@@ -54,7 +57,8 @@ class ConvertCommandTest {
 
     @Test
     void multiModuleTest() throws Exception, IOException {
-        outputFileEqualsInputFile("src/test/resources/multiModuleInput.sarif", "src/test/resources/multiModuleResult.json");
+        outputFileEqualsInputFile("src/test/resources/multiModuleInput.sarif",
+                "src/test/resources/multiModuleResult.json");
     }
 
     private void outputFileEqualsInputFile(String inputSarifFIle, String expectedResultFile)
@@ -73,7 +77,9 @@ class ConvertCommandTest {
         String jsonPath = tmpDir.getAbsolutePath() + "/" + nameWithoutExtenstion + ".json";
         final String expectedString = Files.readString(expected.toPath()).trim();
         final String inputAsString = Files.readString(new File(jsonPath).toPath()).trim();
-        assertEquals(expectedString, inputAsString);
+        JsonElement o1 = JsonParser.parseString(inputAsString);
+        JsonElement o2 = JsonParser.parseString(expectedString);
+        assertEquals(o1, o2);
 
     }
 
