@@ -1,23 +1,25 @@
 ---
-# Configuration file for MegaLinter
-# See all available variables at https://oxsecurity.github.io/megalinter/configuration/ and in linters documentation
+# Configuration file for MegaLinter.
+# See configuration options at https://oxsecurity.github.io/megalinter/configuration/ and more in each linter documentation.
 
+# General
+PRINT_ALPACA: false
 APPLY_FIXES: all
 
-DISABLE_ERRORS: true
+DISABLE_ERRORS: false
 SHOW_ELAPSED_TIME: true
 
-# Report options
+# Reporter options
 CLEAR_REPORT_FOLDER: true
 EMAIL_REPORTER: false
 TEXT_REPORTER: true
 SARIF_REPORTER: true
 GITHUB_COMMENT_REPORTER: false
+GITHUB_STATUS_REPORTER: true
 GITLAB_COMMENT_REPORTER: false
 UPDATED_SOURCES_REPORTER: true
-#REPORT_OUTPUT_FOLDER: false
 
-# Enabled Linters, followed by specific linter settings
+# Linters
 
 # ENABLE: # If you use ENABLE variable, all other languages/formats/tooling formats will be disabled by default
 # ENABLE_LINTERS: # If you use ENABLE_LINTERS variable, all other linters will be disabled by default
@@ -31,12 +33,16 @@ ENABLE_LINTERS:
     REPOSITORY_GITLEAKS,
     REPOSITORY_SECRETLINT,
     JAVA_CHECKSTYLE,
+    JAVA_PMD,
     JSON_PRETTIER,
     MARKDOWN_MARKDOWN_LINT,
     YAML_PRETTIER,
     XML_XMLLINT,
   ]
 
-JAVA_CHECKSTYLE_FILTER_REGEX_INCLUDE: src/main
+# Specific linter options
 
+JAVA_CHECKSTYLE_FILTER_REGEX_INCLUDE: src/main
+JAVA_CHECKSTYLE_CONFIG_FILE: configs/checkstyle_sun_checks_mod.xml
+JAVA_PMD_CONFIG_FILE: configs/pmd_default_java_mod.xml
 COPYPASTE_JSCPD_ARGUMENTS: --ignore "**/build/**","report","LICENSES",".idea/**" --threshold "10"

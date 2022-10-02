@@ -1,6 +1,6 @@
-# SarifConvert
+# SarifTool
 
-`sarifconvert` is a CLI tool for converting the standard SARIF format to other formats (currently only Sonar Custom Format). 
+`sariftool` is a CLI tool for converting the standard SARIF format to other formats (currently only Sonar Custom Format). Having a generalized name means it might do more in the future.;)
 
 
 Contents
@@ -28,7 +28,7 @@ TO-DO
 ## Usage
 ---
 
-To start the interactive program, simply run `$ sarifconvert`.
+To start the interactive program, simply run `$ sariftool`.
 
 ```shell
 

@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>se.janderssonse</groupId>
-  <artifactId>sarifconvert</artifactId>
+  <artifactId>sariftool</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <inceptionYear>2022</inceptionYear>
-  <description>CLI tool for converting SARIF files to other formats.</description>
-  <url>https://github.com/janderssonse/sarifconvert</url>
+  <description>CLI tool for converting SARIF files to sonar. Might be more in the future.</description>
+  <url>https://github.com/janderssonse/sariftool</url>
 
   <licenses>
     <license>
@@ -32,11 +32,11 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <picocli.version>4.6.3</picocli.version>
     <immutables.version>2.9.1</immutables.version>
-        <executable-suffix/>
+    <executable-suffix />
   </properties>
 
   <scm>
-    <developerConnection>scm:git:https://github.com/janderssonse/sarifconvert.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/janderssonse/sariftool.git</developerConnection>
   </scm>
 
   <build>
@@ -97,7 +97,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>se.janderssonse.sarifconvert.cli.SarifConvertCLI</mainClass>
+              <mainClass>se.janderssonse.sariftool.cli.SarifToolCLI</mainClass>
             </manifest>
           </archive>
           <finalName>${project.artifactId}-${project.version}</finalName>
@@ -112,17 +112,17 @@
           </execution>
         </executions>
       </plugin>
-        <plugin>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.2</version>
-            <executions>
-                <execution>
-                    <id>default-jar</id>
-                    <!-- put the default-jar in the none phase to skip it from being created -->
-                    <phase>none</phase>
-                </execution>
-            </executions>
-        </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.2</version>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <!-- put the default-jar in the none phase to skip it from being created -->
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
       <!-- jacoco -->
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -165,19 +165,19 @@
   </build>
 
   <dependencies>
-    
 
-<dependency>
-  <groupId>io.vertx</groupId>
-  <artifactId>vertx-json-schema</artifactId>
-  <version>4.3.3</version>
- </dependency>
- <dependency>
-  <groupId>de.dm.infrastructure</groupId>
-  <artifactId>log-capture</artifactId>
-  <version>3.5.0</version>
-  <scope>test</scope>
-</dependency>
+
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-json-schema</artifactId>
+      <version>4.3.3</version>
+    </dependency>
+    <dependency>
+      <groupId>de.dm.infrastructure</groupId>
+      <artifactId>log-capture</artifactId>
+      <version>3.5.0</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
@@ -197,213 +197,211 @@
       <groupId>org.immutables</groupId>
       <artifactId>gson</artifactId>
       <version>${immutables.version}</version>
-        <!-- If you don't need runtime capabilities - make it compile-only
+      <!-- If you don't need runtime capabilities - make it compile-only
         <scope>provided</scope>-->
-      </dependency>
+    </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>${picocli.version}</version>
+    </dependency>
+   <!-- <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli-codegen</artifactId>
+      <version>${picocli.version}</version>
+    </dependency>-->
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.6.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>4.6.1</version>
+      <scope>test</scope>
+    </dependency>
 
-      <dependency>
-        <groupId>info.picocli</groupId>
-        <artifactId>picocli</artifactId>
-        <version>${picocli.version}</version>
-      </dependency>
-      <!--<dependency>
-        <groupId>info.picocli</groupId>
-        <artifactId>picocli-codegen</artifactId>
-        <version>4.6.3</version>
-        <scope>provided</scope>
-      </dependency>-->
-      <!-- Test dependencies -->
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.8.2</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>4.6.1</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-junit-jupiter</artifactId>
-        <version>4.6.1</version>
-        <scope>test</scope>
-      </dependency>
+  </dependencies>
 
-    </dependencies>
+  <!-- Used when generating a native image with graalvm i.e. mvn -Pnative package -->
+  <profiles>
+    <profile>
+      <id>native</id>
+      <activation>
+        <property>
+          <name>native</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <executions>
+              <execution>
+                <id>build-native</id>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+              <execution>
+                <id>release-native</id>
+                <goals>
+                  <goal>release</goal>
+                </goals>
+                <phase>release</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <imageName>sariftool-${project.version}</imageName>
+              <buildArgs>
+                <buildArg>--allow-incomplete-classpath</buildArg>
+                <buildArg>--no-fallback</buildArg>
+                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                <buildArg>--verbose</buildArg>
+              </buildArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
-    <!-- Used when generating a native image with graalvm i.e. mvn -Pnative package -->
-    <profiles>
-      <profile>
-        <id>native</id>
-        <activation>
-          <property>
-            <name>native</name>
-          </property>
-        </activation>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.graalvm.buildtools</groupId>
-              <artifactId>native-maven-plugin</artifactId>
-              <extensions>true</extensions>
-              <executions>
-                <execution>
-                  <id>build-native</id>
-                  <goals>
-                    <goal>build</goal>
-                  </goals>
-                  <phase>package</phase>
-                </execution>
-                <execution>
-                  <id>release-native</id>
-                  <goals>
-                    <goal>release</goal>
-                  </goals>
-                  <phase>release</phase>
-                </execution>
-              </executions>
-              <configuration>
-                <imageName>sarifconvert-${project.version}</imageName>
-                <buildArgs>
-                  <buildArg>--allow-incomplete-classpath</buildArg>
-                  <buildArg>--no-fallback</buildArg>
-                  <buildArg>-H:+ReportExceptionStackTraces</buildArg>
-                  <buildArg>--verbose</buildArg>
-                </buildArgs>
-              </configuration>
-            </plugin>
-          </plugins>
-        </build>
-      </profile>
-
-      <profile>
-        <id>dist</id>
-        <activation>
-          <property>
-            <name>dist</name>
-          </property>
-        </activation>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-assembly-plugin</artifactId>
-              <configuration>
-                  <attach>false</attach>
-                    <appendAssemblyId>false</appendAssemblyId>
-                <skipAssembly>false</skipAssembly>
-                <descriptors>
-                  <descriptor>src/assembly/assembly.xml</descriptor>
-                </descriptors>
-              </configuration>
-            </plugin>
-              <plugin>
+    <profile>
+      <id>dist</id>
+      <activation>
+        <property>
+          <name>dist</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <attach>false</attach>
+              <appendAssemblyId>false</appendAssemblyId>
+              <skipAssembly>false</skipAssembly>
+              <descriptors>
+                <descriptor>src/assembly/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-jar-plugin</artifactId>
             <version>3.2.2</version>
             <executions>
-                <execution>
-                    <id>default-jar</id>
-                    <!-- put the default-jar in the none phase to skip it from being created -->
-                    <phase>none</phase>
-                </execution>
+              <execution>
+                <id>default-jar</id>
+                <!-- put the default-jar in the none phase to skip it from being created -->
+                <phase>none</phase>
+              </execution>
             </executions>
-        </plugin>
-          </plugins>
-        </build>
-      </profile>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
-      <profile>
-        <id>dist-windows</id>
-        <activation>
-          <os>
-            <family>windows</family>
-          </os>
-        </activation>
-        <properties>
-          <executable-suffix>.exe</executable-suffix>
-        </properties>
-      </profile>
+    <profile>
+      <id>dist-windows</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <executable-suffix>.exe</executable-suffix>
+      </properties>
+    </profile>
 
-      <profile>
-        <id>release</id>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.jreleaser</groupId>
-              <artifactId>jreleaser-maven-plugin</artifactId>
-              <configuration>
-                <jreleaser>
-                  <project>
-                    <snapshot>
-                      <label>{{ projectVersionNumber }}-early-access</label>
-                      <fullChangelog>true</fullChangelog>
-                    </snapshot>
-                    <tags>
-                      <tag>cli</tag>
-                      <tag>sarif</tag>
-                    </tags>
-                    <stereotype>CLI</stereotype>
-                  </project>
-                  <checksum>
-                    <algorithms>
-                      <algorithm>SHA-256</algorithm>
-                    </algorithms>
-                  </checksum>
-                  <release>
-                    <github>
-                      <owner>janderssonse</owner>
-                      <name>sarifconvert</name>
-                      <overwrite>true</overwrite>
-                      <changelog>
-                        <skipMergeCommits>true</skipMergeCommits>
-                        <preset>conventional-commits</preset>
-                      </changelog>
-                    </github>
-                  </release>
-                  <distributions>
-                    <sarifconvert>
-                      <type>NATIVE_IMAGE</type>
-                      <artifacts>
-                        <artifact>
-                          <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-x86_64.tar.gz</path>
-                          <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.tar.gz</transform>
-                          <platform>linux-x86_64</platform>
-                        </artifact>
-                        <artifact>
-                          <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-x86_64.zip</path>
-                          <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.zip</transform>
-                          <platform>linux-x86_64</platform>
-                        </artifact>
-                        <artifact>
-                          <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-windows-x86_64.zip</path>
-                          <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.zip</transform>
-                          <platform>windows-x86_64</platform>
-                        </artifact>
-                        <artifact>
-                          <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-osx-x86_64.zip</path>
-                          <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.zip</transform>
-                          <platform>osx-x86_64</platform>
-                        </artifact>
-                      </artifacts>
-                    </sarifconvert>
-                  </distributions>
-                  <platform>
-                    <replacements>
-                      <osx-x86_64>mac</osx-x86_64>
-                      <aarch_64>aarch64</aarch_64>
-                      <x86_64>amd64</x86_64>
-                      <linux_musl>alpine</linux_musl>
-                    </replacements>
-                  </platform>
-                </jreleaser>
-              </configuration>
-            </plugin>
-          </plugins>
-        </build>
-      </profile>
-    </profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jreleaser</groupId>
+            <artifactId>jreleaser-maven-plugin</artifactId>
+            <configuration>
+              <jreleaser>
+                <project>
+                  <snapshot>
+                    <label>{{ projectVersionNumber }}-early-access</label>
+                    <fullChangelog>true</fullChangelog>
+                  </snapshot>
+                  <tags>
+                    <tag>cli</tag>
+                    <tag>sarif</tag>
+                  </tags>
+                  <stereotype>CLI</stereotype>
+                </project>
+                <checksum>
+                  <algorithms>
+                    <algorithm>SHA-256</algorithm>
+                  </algorithms>
+                </checksum>
+                <release>
+                  <github>
+                    <owner>janderssonse</owner>
+                    <name>sariftool</name>
+                    <overwrite>true</overwrite>
+                    <changelog>
+                      <skipMergeCommits>true</skipMergeCommits>
+                      <preset>conventional-commits</preset>
+                    </changelog>
+                  </github>
+                </release>
+                <distributions>
+                  <sariftool>
+                    <type>NATIVE_IMAGE</type>
+                    <artifacts>
+                      <artifact>
+                        <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-x86_64.tar.gz</path>
+                        <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.tar.gz</transform>
+                        <platform>linux-x86_64</platform>
+                      </artifact>
+                      <artifact>
+                        <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-linux-x86_64.zip</path>
+                        <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64.zip</transform>
+                        <platform>linux-x86_64</platform>
+                      </artifact>
+                      <artifact>
+                        <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-windows-x86_64.zip</path>
+                        <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.zip</transform>
+                        <platform>windows-x86_64</platform>
+                      </artifact>
+                      <artifact>
+                        <path>{{artifactsDir}}/{{distributionName}}-{{projectVersion}}-osx-x86_64.zip</path>
+                        <transform>artifacts/{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64.zip</transform>
+                        <platform>osx-x86_64</platform>
+                      </artifact>
+                    </artifacts>
+                  </sariftool>
+                </distributions>
+                <platform>
+                  <replacements>
+                    <osx-x86_64>mac</osx-x86_64>
+                    <aarch_64>aarch64</aarch_64>
+                    <x86_64>amd64</x86_64>
+                    <linux_musl>alpine</linux_musl>
+                  </replacements>
+                </platform>
+              </jreleaser>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
-  </project>
+</project>

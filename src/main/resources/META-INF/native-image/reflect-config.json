@@ -104,7 +104,18 @@
   "allPublicConstructors":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.SarifConvertCLI",
+  "name":"picocli.CommandLine$HelpCommand",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"se.janderssonse.sariftool.cli.ConvertCommand",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"se.janderssonse.sariftool.cli.SarifToolCLI",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allPublicMethods":true,
@@ -112,40 +123,40 @@
   "allPublicConstructors":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableIssue",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.ImmutableIssue",
   "allDeclaredFields":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableSonarLocation",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.ImmutableSonarLocation",
   "allDeclaredFields":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.ImmutableTextRange",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.ImmutableTextRange",
   "allDeclaredFields":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issue",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.Issue",
   "allDeclaredFields":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issue$Severity",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.Issue$Severity",
   "allDeclaredFields":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issue$Type",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.Issue$Type",
   "allDeclaredFields":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.Issues",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.Issues",
   "allDeclaredFields":true,
   "queriedMethods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.SonarLocation",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.SonarLocation",
   "allDeclaredFields":true
 },
 {
-  "name":"se.janderssonse.sarifconvert.cli.sonar.dto.TextRange",
+  "name":"se.janderssonse.sariftool.cli.sonar.dto.TextRange",
   "allDeclaredFields":true
 },
 {

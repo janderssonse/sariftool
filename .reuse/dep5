@@ -1,9 +1,9 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: sarifconvert
+Upstream-Name: sariftool
 Upstream-Contact: Josef Andersson <josef.andersson@gmail.com>
-Source: https://github.com/janderssonse/sarifconvert
+Source: https://github.com/janderssonse/sariftool
 
-Files: *.sarif *.json *.md *.yml *.xml *.js *.properties .gitignore *.adoc
+Files: *.sarif *.json *.md *.yml *.sh *.xml *.js *.properties .gitignore *.adoc **/comprehensiveSARIFK4
 Copyright: 2022 Josef Andersson
 License: CC0-1.0
 

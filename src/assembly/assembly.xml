@@ -14,7 +14,7 @@
 		<file>
 			<source>${project.build.directory}/${project.artifactId}-${project.version}${executable-suffix}</source>
 			<outputDirectory>./bin</outputDirectory>
-			<destName>sarifconvert${executable-suffix}</destName>
+			<destName>sariftool${executable-suffix}</destName>
 			<fileMode>0755</fileMode>
 		</file>
 	</files>
