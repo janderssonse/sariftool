@@ -15,8 +15,6 @@ echo "Version given was $1, so will look for $JAR"
 
 
 generate_native_image_conf() {
-    local ARGUMENTS="$1"
-    echo "$ARGUMENTS"
     java -agentlib:native-image-agent=config-merge-dir=./src/main/resources/META-INF/native-image/ -jar "${JAR}" convert -s IND -o target
     java -agentlib:native-image-agent=config-merge-dir=./src/main/resources/META-INF/native-image/ -jar "${JAR}" convert -V
     java -agentlib:native-image-agent=config-merge-dir=./src/main/resources/META-INF/native-image/ -jar "${JAR}" convert -h

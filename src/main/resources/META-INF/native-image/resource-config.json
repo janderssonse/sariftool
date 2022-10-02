@@ -1,12 +1,13 @@
 {
-  "resources":{
-  "includes":[
-    {
-      "pattern":"\\Qlogging.properties\\E"
-    }, 
-    {
-      "pattern":"\\Qsarif-json-schema.json\\E"
-    }
-  ]},
-  "bundles":[]
+  "resources": {
+    "includes": [
+      {
+        "pattern": "\\Qlogging.properties\\E"
+      },
+      {
+        "pattern": "\\Qsarif-json-schema.json\\E"
+      }
+    ]
+  },
+  "bundles": []
 }
