@@ -1,0 +1,29 @@
+name: GraalVM Native Image builds
+on: [workflow_dispatch] # yamllint disable-line rule:truthy
+jobs:
+  build:
+    name: sariftool on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: '22.1.0'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build native image
+        run: |
+          ./mvnw -B --file pom.xml -Pnative package
+          ./target/sariftool-0.0.1-SNAPSHOT -h
+      
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: sariftool-${{ matrix.os }}
+          path: target/sariftool*
