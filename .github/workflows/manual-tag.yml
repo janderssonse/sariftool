@@ -10,13 +10,14 @@ jobs:
   tag:
     name: Manual tag
     runs-on: ubuntu-latest
-  steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
-    - name: Tag from GUI!
-      uses: anothrNick/github-tag-action@1.40.0
-      if: ${{ github.event.inputs.version  != '' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CUSTOM_TAG: ${{ github.event.inputs.version  != '' }}
+  
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: Tag from GUI!
+        uses: anothrNick/github-tag-action@1.40.0
+        if: ${{ github.event.inputs.version  != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CUSTOM_TAG: ${{ github.event.inputs.version  != '' }}
