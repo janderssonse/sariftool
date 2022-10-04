@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Release version (semver please)"
+        description: "Tag format: v(semver) please"
         required: true
 
 jobs:
@@ -20,4 +20,4 @@ jobs:
         if: ${{ github.event.inputs.version  != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_TAG: ${{ github.event.inputs.version  != '' }}
+          CUSTOM_TAG: ${{ github.event.inputs.version }}
