@@ -22,5 +22,4 @@ jobs:
         with:
           name: MegaLinter reports
           path: |
-            report
-            mega-linter.log
+            megalinter-reports
