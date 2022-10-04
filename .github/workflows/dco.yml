@@ -16,6 +16,6 @@ jobs:
               spec:
                 dco: true
           EOF
-          cat .confirm.yml
+          cat .conform.yml
       - name: Conform Action
         uses: siderolabs/conform@v0.1.0-alpha.26
