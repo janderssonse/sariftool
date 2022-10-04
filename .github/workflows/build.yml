@@ -12,13 +12,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java_version }}
           distribution: "temurin"
-      
+
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
