@@ -5,15 +5,17 @@ on: [workflow_call] # yamllint disable-line rule:truthy
 jobs:
   signoff:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.x"
-      - name: Check DCO
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create conform.yml
         run: |
-          pip3 install -U dco-check
-          dco-check
+          cat <<EOF > .conform.yml
+          policies:
+            - type: commit
+              spec:
+                dco: true
+          EOF
+          cat .confirm.yml
+      - name: Conform Action
+        uses: siderolabs/conform@v0.1.0-alpha.26
