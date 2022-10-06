@@ -31,11 +31,11 @@ jobs:
         if: contains(matrix.os, 'win') == false
         run: chmod +x ./mvnw
       - name: Maven Package
-        run: ./mvnw --batch-mode --update-snapshots --file pom.xml clean -Pfatjar -package
+        run: ./mvnw clean -Pfatjar  --batch-mode --update-snapshots --file pom.xml -package
 
       - name: Build native image
         run: |
-          ./mvnw -B --file pom.xml -Pnative package
+          ./mvnw -Pnative -B --file pom.xml  package
           ./target/sariftool-0.0.1-SNAPSHOT -h
 
       - name: Upload binary
