@@ -31,7 +31,7 @@ jobs:
         if: contains(matrix.os, 'win') == false
         run: chmod +x ./mvnw
       - name: Maven Package
-        run: ./mvnw clean -Pfatjar  --batch-mode --update-snapshots --file pom.xml -package
+        run: ./mvnw clean -Pfatjar  --batch-mode --update-snapshots --file pom.xml package
 
       - name: Build native image
         run: |
