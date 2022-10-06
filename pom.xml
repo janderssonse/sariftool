@@ -32,7 +32,9 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <picocli.version>4.6.3</picocli.version>
     <immutables.version>2.9.1</immutables.version>
+    <!-- distribution settings -->
     <executable-suffix />
+    <distribution.directory>${project.build.directory}/distributions</distribution.directory>
   </properties>
 
   <scm>
@@ -42,6 +44,7 @@
   <build>
     <extensions>
       <extension>
+        <!-- os identifier plugin extension-->
         <groupId>kr.motd.maven</groupId>
         <artifactId>os-maven-plugin</artifactId>
         <version>1.7.0</version>
@@ -85,43 +88,6 @@
         <groupId>org.jreleaser</groupId>
         <artifactId>jreleaser-maven-plugin</artifactId>
         <version>1.2.0</version>
-      </plugin>
-      <!-- fat jar plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.1.1</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>se.janderssonse.sariftool.cli.SarifToolCLI</mainClass>
-            </manifest>
-          </archive>
-          <finalName>${project.artifactId}-${project.version}</finalName>
-        </configuration>
-        <executions>
-          <execution>
-            <id>jar-with-dep</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.2</version>
-        <executions>
-          <execution>
-            <id>default-jar</id>
-            <!-- put the default-jar in the none phase to skip it from being created -->
-            <phase>none</phase>
-          </execution>
-        </executions>
       </plugin>
       <!-- jacoco -->
       <plugin>
@@ -205,7 +171,7 @@
       <artifactId>picocli</artifactId>
       <version>${picocli.version}</version>
     </dependency>
-   <!-- <dependency>
+    <!-- <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli-codegen</artifactId>
       <version>${picocli.version}</version>
@@ -229,10 +195,11 @@
       <version>4.6.1</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
-  <!-- Used when generating a native image with graalvm i.e. mvn -Pnative package -->
+  <!-- Dear maven, in future major versions, please allow for setting profiles in seperate files and include them in a pom with reference -->
+  <!-- Here we go with the profiles -->
+  <!-- Native image profile -->
   <profiles>
     <profile>
       <id>native</id>
@@ -264,6 +231,10 @@
               </execution>
             </executions>
             <configuration>
+              <mainClass>se.janderssonse.sariftool.cli.SarifToolCLI</mainClass>
+              <classpath>
+                <entry>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</entry>
+              </classpath>
               <imageName>sariftool-${project.version}</imageName>
               <buildArgs>
                 <buildArg>--allow-incomplete-classpath</buildArg>
@@ -277,6 +248,57 @@
       </build>
     </profile>
 
+    <!-- Fat jar profile -->
+    <profile>
+      <id>fatjar</id>
+      <activation>
+        <property>
+          <name>fatjar</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.4.2</version>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <archive>
+                <manifest>
+                  <mainClass>se.janderssonse.sariftool.cli.SarifToolCLI</mainClass>
+                </manifest>
+              </archive>
+              <finalName>${project.artifactId}-${project.version}</finalName>
+            </configuration>
+            <executions>
+              <execution>
+                <id>jar-with-dep</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.2.2</version>
+            <executions>
+              <execution>
+                <id>default-jar</id>
+                <!-- put the default-jar in the none phase to skip it from being created -->
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Distribution profile -->
     <profile>
       <id>dist</id>
       <activation>
@@ -289,15 +311,29 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.4.2</version>
             <configuration>
               <attach>false</attach>
               <appendAssemblyId>false</appendAssemblyId>
-              <skipAssembly>false</skipAssembly>
+              <!-- <skipAssembly>false</skipAssembly> -->
+              <finalName>${project.artifactId}-${project.version}-${os.detected.classifier}</finalName>
+              <outputDirectory>${distribution.directory}</outputDirectory>
+              <workDirectory>${project.build.directory}/assembly/work</workDirectory>
               <descriptors>
                 <descriptor>src/assembly/assembly.xml</descriptor>
               </descriptors>
             </configuration>
+            <executions>
+              <execution>
+                <id>make-distribution</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
+
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
             <version>3.2.2</version>
@@ -325,6 +361,7 @@
       </properties>
     </profile>
 
+    <!-- release profile -->
     <profile>
       <id>release</id>
       <build>

@@ -5,17 +5,14 @@
 	<formats>
 		<format>tar.gz</format>
 		<format>zip</format>
+		<format>dir</format>
 	</formats>
 	<files>
 		<file>
-			<source>LICENSE</source>
-			<outputDirectory>./</outputDirectory>
-		</file>
-		<file>
-			<source>${project.build.directory}/${project.artifactId}-${project.version}${executable-suffix}</source>
-			<outputDirectory>./bin</outputDirectory>
-			<destName>sariftool${executable-suffix}</destName>
+            <source>${project.build.directory}/${project.artifactId}-${project.version}${executable-suffix}</source>
+            <outputDirectory>./bin</outputDirectory>
+            <destName>${project.artifactId}${executable-suffix}</destName>
 			<fileMode>0755</fileMode>
-		</file>
+        </file>
 	</files>
 </assembly>

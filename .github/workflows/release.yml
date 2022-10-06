@@ -1,10 +1,10 @@
 name: Release
-
+# Trigger manually or on tag push
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Release version"
+        description: "Release version (semver please)"
         required: true
       next:
         description: "Next version"
@@ -14,7 +14,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: "Set up Java"
         uses: actions/setup-java@v2
@@ -44,7 +44,7 @@ jobs:
           ./mvnw -B versions:set versions:commit -DnewVersion=$RELEASE_VERSION
           git config --global user.email "github-action-bot@users.noreply.github.com"
           git config --global user.name "GitHub Action"
-          git commit -a -m "🏁 Releasing version $RELEASE_VERSION"
+          git commit -a -m "Releasing version $RELEASE_VERSION"
           git push
           echo "removed: origin HEAD:main"
           git rev-parse HEAD > HEAD
