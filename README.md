@@ -2,7 +2,6 @@
 
 `sariftool` is a CLI tool for converting the standard SARIF format to other formats (currently only Sonar Custom Format). Having a generalized name means it might do more in the future.;)
 
-
 Contents
 ========
 
