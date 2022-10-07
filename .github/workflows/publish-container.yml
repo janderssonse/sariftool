@@ -22,6 +22,7 @@ jobs:
           name: sariftool-bin-ubuntu-latest
 
       - name: "Unzip and rename binary"
+        run: |
           find . -maxdepth 1 -iname 'sariftool-?.?.?*' -not -iname '*.txt'  -type f -exec cp -v {} sariftool  \;
           chmod a+x sariftool
 
