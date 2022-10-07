@@ -7,15 +7,13 @@ env:
   IMAGE_NAME: sariftool
 
 jobs:
-  
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
-        contents: read
-        packages: write
+      contents: read
+      packages: write
 
     steps:
-      
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -23,7 +21,7 @@ jobs:
         with:
           name: sariftool-bin-ubuntu-latest
 
-      - name: 'Unzip and rename binary'
+      - name: "Unzip and rename binary"
         run: |
           unzip sariftool-bin-ubuntu-latest 
           find . -maxdepth 1 -iname 'sariftool-?.?.?*' -not -iname '*.txt'  -type f -exec cp -v {} sariftool  \;
@@ -31,11 +29,10 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-      
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-        
 
       - name: Inspect builder
         run: |
@@ -60,7 +57,7 @@ jobs:
             type=ref,event=tag,priority=2
             type=raw,value=${{ env.IMAGE_NAME }}-{{branch}}-{{date 'YYYYMMDD'}}-{{sha}},priority=31,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
             type=raw,value=${{ env.IMAGE_NAME }}-{{tag}}-{{date 'YYYYMMDD'}}-{{sha}},priority=32, enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-      
+
       - name: Build and push distribution image
         uses: docker/build-push-action@v2
         with:
@@ -72,4 +69,3 @@ jobs:
           push: true
           tags: ${{ steps.metadist.outputs.tags }}
           labels: ${{ steps.metadist.outputs.labels }}
-      

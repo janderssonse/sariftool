@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       #TODO - this could downloaded from earlier steps/uploaded artifact instead
-      - name: Build fat jar 
+      - name: Build fat jar
         if: contains(matrix.os, 'win') == false
         run: chmod +x ./mvnw
       - name: Maven Package

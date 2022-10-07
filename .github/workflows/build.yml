@@ -32,7 +32,7 @@ jobs:
         run: chmod +x ./mvnw
       - name: Maven Package
         run: ./mvnw --batch-mode --update-snapshots --file pom.xml package
-      
+
       - name: Build fat jar
         if: contains(matrix.os, 'win') == false
         run: chmod +x ./mvnw

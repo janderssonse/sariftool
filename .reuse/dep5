@@ -3,7 +3,7 @@ Upstream-Name: sariftool
 Upstream-Contact: Josef Andersson <josef.andersson@gmail.com>
 Source: https://github.com/janderssonse/sariftool
 
-Files: *.sarif *.json *.md *.yml *.sh *.xml *.js *.properties .gitignore *.adoc **/comprehensiveSARIFK4
+Files: *.sarif **/DOCKERFILE *.json *.md *.yml *.sh *.xml *.js *.properties .gitignore *.adoc **/comprehensiveSARIFK4
 Copyright: 2022 Josef Andersson
 License: CC0-1.0
 
