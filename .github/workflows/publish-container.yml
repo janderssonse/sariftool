@@ -17,9 +17,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      # The path it downloads to is set this way
+      # so that it matches the one you would get if
+      # you built it in CLI with mvn -Pnative.
+      # Makes the COPY in dockerfile predictable
       - uses: actions/download-artifact@v3
         with:
           name: sariftool-bin-ubuntu-latest
+          path: target/distributions/sariftool-0-linux-x86_64/sariftool-0-linux-x86_64/bin/
 
       - name: "Unzip and rename binary"
         run: |
