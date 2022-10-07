@@ -32,6 +32,6 @@ jobs:
   native-build:
     needs: [test]
     uses: ./.github/workflows/native-image.yml
-  publish-docker:
-    needs: [native-buile]
+  publish-container-image:
+    needs: [native-build]
     uses: ./.github/workflows/publish-container.yml
