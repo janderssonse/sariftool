@@ -1,0 +1,12 @@
+FROM debian:stable-slim AS build-env
+
+FROM gcr.io/distroless/base
+
+LABEL org.opencontainers.image.url="https://github.com/janderssonse/sariftool"
+LABEL org.opencontainers.image.source="https://github.com/janderssonse/sariftool"
+
+COPY --from=build-env /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz.so.1
+COPY target/distributions/sariftool-*-linux-x86_64/sariftool-*-linux-x86_64/bin/sariftool /sariftool
+
+
+ENTRYPOINT ["/sariftool"]
