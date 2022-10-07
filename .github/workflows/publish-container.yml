@@ -5,6 +5,7 @@ on: [workflow_call] # yamllint disable-line rule:truthy
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: sariftool
+  ARTIFACT_TARGET: target/distributions/sariftool-0-linux-x86_64/sariftool-0-linux-x86_64/bin
 
 jobs:
   build-and-push-image:
@@ -24,11 +25,12 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: sariftool-bin-ubuntu-latest
-          path: target/distributions/sariftool-0-linux-x86_64/sariftool-0-linux-x86_64/bin/
+          path: ${{ env.ARTIFACT_TARGET }}
 
       - name: "Unzip and rename binary"
         run: |
-          find . -maxdepth 1 -iname 'sariftool-?.?.?*' -not -iname '*.txt'  -type f -exec cp -v {} sariftool  \;
+          cd ${{ env.ARTIFACT_TARGET }}
+          find  -maxdepth 1 -iname 'sariftool-?.?.?*' -not -iname '*.txt'  -type f -exec cp -v {} sariftool  \;
           chmod a+x sariftool
 
       - name: Set up QEMU
