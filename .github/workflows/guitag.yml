@@ -15,6 +15,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - uses: madhead/semver-utils@latest
+        id: semvercheck
+        with:
+          version: ${{ github.event.inputs.version }}
+          lenient: false
+        continue-on-error: false
+      - run: |
+          echo "${{ steps.semvercheck.outcome }}"
+      
       - name: Tag from GUI!
         uses: anothrNick/github-tag-action@1.40.0
         if: ${{ github.event.inputs.version  != '' }}

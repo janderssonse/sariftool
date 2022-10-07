@@ -60,7 +60,7 @@ jobs:
             latest=true
           tags: |
             type=raw,value={{branch}},priority=1,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
-            type=ref,event=tag,priority=2
+            type=semver,pattern={{version}},priority=2
             type=raw,value=${{ env.IMAGE_NAME }}-{{branch}}-{{date 'YYYYMMDD'}}-{{sha}},priority=31,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
             type=raw,value=${{ env.IMAGE_NAME }}-{{tag}}-{{date 'YYYYMMDD'}}-{{sha}},priority=32, enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
