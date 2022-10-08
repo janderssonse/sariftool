@@ -5,6 +5,10 @@ on:
       version:
         description: "Tag format: v(semver) please"
         required: true
+      
+      message:
+        description: "Tag message"
+        required: false
 
 jobs:
   tag:
@@ -26,7 +30,13 @@ jobs:
       
       - name: Tag from GUI!
         uses: anothrNick/github-tag-action@1.40.0
-        if: ${{ github.event.inputs.version  != '' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_TAG: ${{ github.event.inputs.version }}
+        if: ${{ success() }}
+        run: |
+          tag=${{ github.event.inputs.version }}
+          message=${{ github.event.inputs.version }}
+
+          git config user.name 'github-actions-manual-trigger[bot]'
+          git config user.email 'github-actions-manual-trigger[bot]@users.noreply.github.com'
+
+          git tag -a "${tag}" -m "${message}"
+          git push origin "${tag}"
