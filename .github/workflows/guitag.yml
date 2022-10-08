@@ -29,7 +29,6 @@ jobs:
           echo "${{ steps.semvercheck.outcome }}"
       
       - name: Tag from GUI!
-        uses: anothrNick/github-tag-action@1.40.0
         if: ${{ success() }}
         run: |
           tag=${{ github.event.inputs.version }}
