@@ -28,7 +28,8 @@ jobs:
           version: ${{ github.event.inputs.version }}
           lenient: false
         continue-on-error: false
-        run: |
+
+      - run: |
           echo "${{ steps.semvercheck.outcome }}"
       
       - name: Import bot's GPG key for signing
