@@ -52,4 +52,4 @@ jobs:
 
           echo "${tag} ${message}"
           git tag -s -a "${tag}" -m "${message}"
-          git push origin "${tag}"
+          git push origin "${message:-tag}"
