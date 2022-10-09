@@ -49,5 +49,6 @@ jobs:
           tag=${{ github.event.inputs.version }}
           message=${{ github.event.inputs.version }}
 
+          echo "${tag} ${message}"
           git tag -s -a "${tag}" -m "${message}"
           git push origin "${tag}"
