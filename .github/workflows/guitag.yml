@@ -22,13 +22,13 @@ jobs:
           persist-credentials: false # This is important if you have branch protection rules!
 
       - name: Semver check input
-      - uses: madhead/semver-utils@latest
+        uses: madhead/semver-utils@latest
         id: semvercheck
         with:
           version: ${{ github.event.inputs.version }}
           lenient: false
         continue-on-error: false
-      - run: |
+        run: |
           echo "${{ steps.semvercheck.outcome }}"
       
       - name: Import bot's GPG key for signing
