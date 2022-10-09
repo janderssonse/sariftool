@@ -18,8 +18,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false # This is important if you have branch protection rules!
 
       - name: Semver check input
         uses: madhead/semver-utils@latest
