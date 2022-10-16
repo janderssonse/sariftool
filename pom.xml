@@ -30,9 +30,26 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- Versions -->
+    <commonslang3.version>3.12.0</commonslang3.version>
+    <jackson.version>[2.13.4,)</jackson.version>
+    <jacoco.version>0.8.8</jacoco.version>
+    <jreleaser.version>1.2.0</jreleaser.version>
+    <junit.version>5.8.2</junit.version>
+    <logcapture.version>3.6.0</logcapture.version>
+    <mockito.version>4.8.0</mockito.version>
+    <osversion.version>1.7.0</osversion.version>
     <picocli.version>4.6.3</picocli.version>
-    <immutables.version>2.9.1</immutables.version>
-    <!-- distribution settings -->
+    <vertx.json.schema.version>4.3.4</vertx.json.schema.version>
+
+    <mvn.assembly.version>3.4.2</mvn.assembly.version>
+    <mvn.compiler.version>3.10.1</mvn.compiler.version>
+    <mvn.jar.version>3.2.2</mvn.jar.version>
+    <mvn.release.version>3.0.0-M6</mvn.release.version>
+    <mvn.surefire.version>3.0.0-M7</mvn.surefire.version>
+
+    <!-- Distribution settings -->
     <executable-suffix />
     <distribution.directory>${project.build.directory}/distributions</distribution.directory>
   </properties>
@@ -47,23 +64,18 @@
         <!-- os identifier plugin extension-->
         <groupId>kr.motd.maven</groupId>
         <artifactId>os-maven-plugin</artifactId>
-        <version>1.7.0</version>
+        <version>${osversion.version}</version>
       </extension>
     </extensions>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>${mvn.compiler.version}</version>
         <configuration>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
           <annotationProcessorPaths>
-            <dependency>
-              <groupId>org.immutables</groupId>
-              <artifactId>value</artifactId>
-              <version>${immutables.version}</version>
-            </dependency>
             <dependency>
               <groupId>info.picocli</groupId>
               <artifactId>picocli-codegen</artifactId>
@@ -79,7 +91,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>3.0.0-M6</version>
+        <version>${mvn.release.version}</version>
         <configuration>
           <tagNameFormat>v@{project.version}</tagNameFormat>
         </configuration>
@@ -87,84 +99,84 @@
       <plugin>
         <groupId>org.jreleaser</groupId>
         <artifactId>jreleaser-maven-plugin</artifactId>
-        <version>1.2.0</version>
+        <version>${jreleaser.version}</version>
       </plugin>
       <!-- jacoco -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.8</version>
+        <version>${jacoco.version}</version>
         <executions>
           <execution>
-            <id>pre-test</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
-            <configuration>
-              <propertyName>jacocoArgLine</propertyName>
-              <destFile>${project.build.directory}/jacoco/jacoco.exec</destFile>
-            </configuration>
           </execution>
           <execution>
-            <id>post-test</id>
+            <id>report</id>
             <phase>test</phase>
             <goals>
               <goal>report</goal>
             </goals>
             <configuration>
-              <dataFile>${project.build.directory}/jacoco/jacoco.exec</dataFile>
-              <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
+              <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jacoco-check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <haltOnFailure>false</haltOnFailure>
+              <rules>
+                <rule>
+                  <element>CLASS</element>
+                  <excludes>
+                    <exclude>*Test</exclude>
+                  </excludes>
+                  <limits>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>50%</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
             </configuration>
           </execution>
         </executions>
       </plugin>
+      <!-- Test plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M7</version>
-        <configuration>
-          <argLine>${jacocoArgLine}</argLine>
-          <reportsDirectory>${project.build.directory}/surefire</reportsDirectory>
-        </configuration>
+        <version>${mvn.surefire.version}</version>
       </plugin>
     </plugins>
   </build>
 
   <dependencies>
-
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-json-schema</artifactId>
-      <version>4.3.3</version>
-    </dependency>
-    <dependency>
-      <groupId>de.dm.infrastructure</groupId>
-      <artifactId>log-capture</artifactId>
-      <version>3.5.0</version>
-      <scope>test</scope>
+      <version>${vertx.json.schema.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.12.0</version>
+      <version>${commonslang3.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.9.1</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>value</artifactId>
-      <version>${immutables.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>gson</artifactId>
-      <version>${immutables.version}</version>
-      <!-- If you don't need runtime capabilities - make it compile-only
-        <scope>provided</scope>-->
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>info.picocli</groupId>
@@ -176,23 +188,30 @@
       <artifactId>picocli-codegen</artifactId>
       <version>${picocli.version}</version>
     </dependency>-->
-    <!-- Test dependencies -->
+
+    <!-- Test -->
+    <dependency>
+      <groupId>de.dm.infrastructure</groupId>
+      <artifactId>log-capture</artifactId>
+      <version>${logcapture.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.8.2</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>4.6.1</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>4.6.1</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -237,7 +256,6 @@
               </classpath>
               <imageName>sariftool-${project.version}</imageName>
               <buildArgs>
-                <buildArg>--allow-incomplete-classpath</buildArg>
                 <buildArg>--no-fallback</buildArg>
                 <buildArg>-H:+ReportExceptionStackTraces</buildArg>
                 <buildArg>--verbose</buildArg>
@@ -261,7 +279,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.4.2</version>
+            <version>${mvn.assembly.version}</version>
             <configuration>
               <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -285,7 +303,7 @@
           </plugin>
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.2</version>
+            <version>${mvn.jar.version}</version>
             <executions>
               <execution>
                 <id>default-jar</id>
@@ -311,7 +329,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.4.2</version>
+            <version>${mvn.assembly.version}</version>
             <configuration>
               <attach>false</attach>
               <appendAssemblyId>false</appendAssemblyId>
@@ -336,7 +354,7 @@
 
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.2</version>
+            <version>${mvn.jar.version}</version>
             <executions>
               <execution>
                 <id>default-jar</id>
@@ -414,7 +432,6 @@
                   </sariftool>
                 </distributions>
                 <platform>
-                  
                   <replacements>
                     <osx-x86_64>mac</osx-x86_64>
                     <aarch_64>aarch64</aarch_64>
@@ -429,5 +446,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
