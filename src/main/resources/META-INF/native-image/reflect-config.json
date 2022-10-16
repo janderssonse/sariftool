@@ -1,12 +1,40 @@
 [
   {
+    "name": "[Lcom.fasterxml.jackson.databind.deser.Deserializers;"
+  },
+  {
+    "name": "[Lcom.fasterxml.jackson.databind.ser.Serializers;"
+  },
+  {
+    "name": "com.fasterxml.jackson.databind.ext.Java7HandlersImpl",
+    "methods": [{ "name": "<init>", "parameterTypes": [] }]
+  },
+  {
+    "name": "com.fasterxml.jackson.databind.ext.Java7SupportImpl",
+    "methods": [{ "name": "<init>", "parameterTypes": [] }]
+  },
+  {
+    "name": "java.lang.Class",
+    "methods": [{ "name": "getRecordComponents", "parameterTypes": [] }]
+  },
+  {
     "name": "java.lang.Object",
+    "allDeclaredFields": true,
+    "queryAllDeclaredMethods": true
+  },
+  {
+    "name": "java.lang.Record",
     "allDeclaredFields": true,
     "queryAllDeclaredMethods": true
   },
   {
     "name": "java.lang.System",
     "methods": [{ "name": "console", "parameterTypes": [] }]
+  },
+  {
+    "name": "java.lang.reflect.RecordComponent",
+    "methods": [{ "name": "getName", "parameterTypes": [] }],
+    "queriedMethods": [{ "name": "getType", "parameterTypes": [] }]
   },
   {
     "name": "java.nio.file.Path"
@@ -154,41 +182,59 @@
     "allPublicConstructors": true
   },
   {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.ImmutableIssue",
-    "allDeclaredFields": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.ImmutableSonarLocation",
-    "allDeclaredFields": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.ImmutableTextRange",
-    "allDeclaredFields": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.Issue",
-    "allDeclaredFields": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.Issue$Severity",
-    "allDeclaredFields": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.Issue$Type",
-    "allDeclaredFields": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.Issues",
+    "name": "se.janderssonse.sariftool.model.sonar.Issue",
     "allDeclaredFields": true,
-    "queriedMethods": [{ "name": "<init>", "parameterTypes": [] }]
+    "queryAllDeclaredMethods": true,
+    "queryAllDeclaredConstructors": true,
+    "methods": [
+      { "name": "effortMinutes", "parameterTypes": [] },
+      { "name": "engineId", "parameterTypes": [] },
+      { "name": "primaryLocation", "parameterTypes": [] },
+      { "name": "ruleId", "parameterTypes": [] },
+      { "name": "secondaryLocations", "parameterTypes": [] },
+      { "name": "severity", "parameterTypes": [] },
+      { "name": "type", "parameterTypes": [] }
+    ]
   },
   {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.SonarLocation",
-    "allDeclaredFields": true
+    "name": "se.janderssonse.sariftool.model.sonar.Issue$Severity",
+    "allDeclaredFields": true,
+    "queryAllDeclaredMethods": true
   },
   {
-    "name": "se.janderssonse.sariftool.cli.sonar.dto.TextRange",
-    "allDeclaredFields": true
+    "name": "se.janderssonse.sariftool.model.sonar.Issue$Type",
+    "allDeclaredFields": true,
+    "queryAllDeclaredMethods": true
+  },
+  {
+    "name": "se.janderssonse.sariftool.model.sonar.Issues",
+    "allDeclaredFields": true,
+    "queryAllDeclaredMethods": true,
+    "queryAllDeclaredConstructors": true,
+    "methods": [{ "name": "getResult", "parameterTypes": [] }]
+  },
+  {
+    "name": "se.janderssonse.sariftool.model.sonar.SonarLocation",
+    "allDeclaredFields": true,
+    "queryAllDeclaredMethods": true,
+    "queryAllDeclaredConstructors": true,
+    "methods": [
+      { "name": "filePath", "parameterTypes": [] },
+      { "name": "message", "parameterTypes": [] },
+      { "name": "textRange", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "se.janderssonse.sariftool.model.sonar.TextRange",
+    "allDeclaredFields": true,
+    "queryAllDeclaredMethods": true,
+    "queryAllDeclaredConstructors": true,
+    "methods": [
+      { "name": "endColumn", "parameterTypes": [] },
+      { "name": "endLine", "parameterTypes": [] },
+      { "name": "startColumn", "parameterTypes": [] },
+      { "name": "startLine", "parameterTypes": [] }
+    ]
   },
   {
     "name": "sun.misc.Unsafe",

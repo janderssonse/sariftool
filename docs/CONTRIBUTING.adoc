@@ -10,7 +10,7 @@ as others who are interested in this solution.
 == Changing the code-base
 
 Generally speaking, you should fork this repository, make changes in your
-own fork, and then submit a pull-request. This is often called the https://gist.github.com/Chaser324/ce0505fbed06b947d962[Fork-and-Pull model] 
+own fork, and then submit a pull-request. This is often called the https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/about-collaborative-development-models#fork-and-pull-model[Fork-and-Pull model]
 
 * All contributions to this project will be released under the inbound=outbound norm, that is,
  they are submitted under the projects main license.
@@ -22,10 +22,10 @@ own fork, and then submit a pull-request. This is often called the https://gist.
 === Signoff and optionally Sign each Commit
 
 As part of filing a pull request you agree to the DCO.
-https://developercertificate.org/[Developer Certificate of Origin] 
+https://developercertificate.org/[Developer Certificate of Origin]
 
 A DCO is a lightweight way for a contributor to confirm that they wrote or otherwise have the right
-to submit code or documentation to a project. 
+to submit code or documentation to a project.
 
 To confirm that you agree to the DCO, you need to *sign off* your commits when sending us a pull request. Technically, this is done by supplying the `-s`/`--signoff` flag to git when committing:
 

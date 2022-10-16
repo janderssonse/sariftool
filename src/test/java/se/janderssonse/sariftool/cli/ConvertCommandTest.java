@@ -1,4 +1,3 @@
-
 // SPDX-FileCopyrightText: 2021 Baloise Group
 // SPDX-FileCopyrightText: 2022 Josef Andersson
 //
@@ -10,17 +9,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.dm.infrastructure.logcapture.LogCapture;
 import picocli.CommandLine;
+import se.janderssonse.sariftool.util.JsonWrapper;
+import se.janderssonse.sariftool.util.Util;
 
 class ConvertCommandTest {
     @TempDir
@@ -73,13 +72,12 @@ class ConvertCommandTest {
         CommandLine cmd = new CommandLine(app);
         cmd.execute("convert", "-s=" + input, "-o=" + tmpDir);
 
-        String nameWithoutExtenstion = ConvertCommand.removeFileExtension(input, true);
+        String nameWithoutExtenstion = Util.removeFileExtension(input.toPath(), true);
         String jsonPath = tmpDir.getAbsolutePath() + "/" + nameWithoutExtenstion + ".json";
-        final String expectedString = Files.readString(expected.toPath()).trim();
-        final String inputAsString = Files.readString(new File(jsonPath).toPath()).trim();
-        JsonElement o1 = JsonParser.parseString(inputAsString);
-        JsonElement o2 = JsonParser.parseString(expectedString);
-        assertEquals(o1, o2);
+        JsonNode a = JsonWrapper.toNode(expected);
+        JsonNode b = JsonWrapper.toNode(new File(jsonPath));
+
+        assertEquals(JsonWrapper.toJson(b), JsonWrapper.toJson(a));
 
     }
 

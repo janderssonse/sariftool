@@ -17,7 +17,7 @@ git clone https://github.com/YOUR_FORK/sariftool
     * asdf-vm
     * podman
 
-Look in .tool-versions to see the specific versions in use during development.
+Look in '.tool-versions' to see the specific versions in use during development.
 You can use the 'asdf-vm' tool to install and let it handle the above versions, or use the 'scripts/asdf-install-tool-versions.sh'.
 
 
@@ -34,7 +34,7 @@ You can use the 'asdf-vm' tool to install and let it handle the above versions, 
 - Build it and...
 
 ```console
-./mwnw clean package
+./mwnw -Pfatjar clean package
 ```
 
 - Run it
@@ -47,7 +47,7 @@ java -jar target/sariftool-0.0.1-SNAPSHOT-jar-with-dependencies.jar -h
 - Build it and ...
 
 ```console
-./mvnw clean -Pnative package
+./mwnw -Pfatjar clean package && ./mvnw -Pnative -DskipTests package
 ```
 
 - Run it
@@ -68,10 +68,10 @@ You can (must) add to the configuration by doing runtime analyze of execution pa
  ./scripts/graal-native-gen.sh 'CURRENT_VERSION_OF_JAR'
 ```
 
-to generate new native configuration. 
+to generate new native configuration.
 And possible, if you added new input functions, add these to the 'graal-native-gen.sh' script.
 
-## Project Quality
+## Project health and quality
 
 * Project quality tooling:
     * nodejs (for commitlint linting)
@@ -80,9 +80,27 @@ And possible, if you added new input functions, add these to the 'graal-native-g
     * commitlint
     * repolinter
 
+Make it a habit of, before pushing:
+
+### 1. Check various code quality tools
+
 Run 'scripts/check-code-quality.sh' to check project quality health.
 The script is dependent on podman, commitlint and repolinter.
-Please run this at least before pushing commits.
+
+
+### 2. Check dependencies
+
+```console
+  mvn versions:display-dependency-updates
+```
+
+### 3. Check test coverage
+
+```console
+  mvn clean verify
+```
+
+
 
 Note: In the future, the dependency on commitlint and repolinter could be handled by using an container image, or by adding these by PR in Megalinter.
 

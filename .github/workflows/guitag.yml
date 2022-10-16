@@ -5,7 +5,7 @@ on:
       version:
         description: "Tag format: v(semver) please"
         required: true
-      
+
       message:
         description: "Tag message"
         required: false
@@ -32,7 +32,7 @@ jobs:
 
       - run: |
           echo "${{ steps.semvercheck.outcome }}"
-      
+
       - name: Import bot's GPG key for signing
         id: import-gpg
         if: ${{ success() }}
@@ -43,7 +43,7 @@ jobs:
           git_config_global: true
           git_user_signingkey: true
           git_tag_gpgsign: true
-      
+
       - name: Tag from GUI!
         if: ${{ success() }}
         run: |
