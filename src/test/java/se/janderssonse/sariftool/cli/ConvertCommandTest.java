@@ -45,13 +45,7 @@ class ConvertCommandTest {
 
     @Test
     void testHappyCase() throws Exception, IOException {
-        outputFileEqualsInputFile("src/test/resources/example.sarif", "src/test/resources/expectedResult.json");
-    }
-
-    @Test
-    void testWithFilter() throws Exception, IOException {
-        outputFileEqualsInputFile("src/test/resources/InputWithTestResource.sarif",
-                "src/test/resources/expectedResult.json");
+        outputFileEqualsInputFile("src/test/resources/exampleWithTestDir.sarif", "src/test/resources/expectedResult.json");
     }
 
     @Test

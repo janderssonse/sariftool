@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public final class SonarMapper implements Mapper {
 
     private static final Logger LOG = Logger.getLogger(SonarMapper.class.getName());
+
     private final List<Result> results = new ArrayList<>();
     private List<Rule> rules = new ArrayList<>();
     private final Issues mappedIssues = new Issues();
@@ -89,7 +90,7 @@ public final class SonarMapper implements Mapper {
 
     private Issue mapResult(final Result result) {
         final Issue.Severity severity = mapSeverity(result.ruleId().get());
-        String driverName = driver != null ? driver.toString() : SonarMapper.class.getSimpleName();
+        String driverName = driver != null ? driver.asShortString() : "";
         return new Issue(Optional.of(driverName),
                 Optional.of(result.ruleId().get()),
                 Optional.of(severity),
@@ -256,7 +257,7 @@ public final class SonarMapper implements Mapper {
     }
 
     public String summary() {
-        return String.format("parsed %d Rules, %d Results resulting in %d issues.",
+        return String.format("Parsed %d rules, %d results resulting in %d issues.",
                 rules.size(), results.size(), mappedIssues.getResult().size());
     }
 

@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public record Location(String uri, Optional<String> uriBaseId, Optional<Integer> index, Optional<Region> region) {
 
-  public Location(final Optional<String> uriBaseId, final Optional<Integer> index, final Optional<Region> region) {
-    this("", uriBaseId, index, region);
-  }
-
-  @Override
-  public final String toString() {
-    return String.format("%s, %s", !uri().isEmpty() ? uri() : "<URI_MISSING>",
-        region().isPresent() ? region().get().toString() : "n/a");
-  }
+    @Override
+    public final String toString() {
+        return String.format("%s[%nuri=%s%nuriBaseId=%s%nindex=%s%nregion%n]",
+                this.getClass().getName(),
+                uri != null ? uri : "",
+                uriBaseId.isPresent() ? uriBaseId.get() : "",
+                index.isPresent() ? index.get() : "",
+                region.isPresent() ? region.get() : "");
+    }
 }

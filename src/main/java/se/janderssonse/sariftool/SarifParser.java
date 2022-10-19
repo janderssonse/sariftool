@@ -252,7 +252,7 @@ public final class SarifParser {
 
     private static Optional<String> toTextElement(final JsonNode node, final String parentProperty) {
         JsonNode element = node.get(parentProperty);
-        JsonNode ob = !element.isMissingNode() ? element : JsonNodeFactory.instance.objectNode();
+        JsonNode ob = element != null ? element : JsonNodeFactory.instance.objectNode();
         return asString(ob, ELEMENT_TEXT);
     }
 

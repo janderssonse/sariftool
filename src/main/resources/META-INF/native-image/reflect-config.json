@@ -1,246 +1,213 @@
 [
-  {
-    "name": "[Lcom.fasterxml.jackson.databind.deser.Deserializers;"
-  },
-  {
-    "name": "[Lcom.fasterxml.jackson.databind.ser.Serializers;"
-  },
-  {
-    "name": "com.fasterxml.jackson.databind.ext.Java7HandlersImpl",
-    "methods": [{ "name": "<init>", "parameterTypes": [] }]
-  },
-  {
-    "name": "com.fasterxml.jackson.databind.ext.Java7SupportImpl",
-    "methods": [{ "name": "<init>", "parameterTypes": [] }]
-  },
-  {
-    "name": "java.lang.Class",
-    "methods": [{ "name": "getRecordComponents", "parameterTypes": [] }]
-  },
-  {
-    "name": "java.lang.Object",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true
-  },
-  {
-    "name": "java.lang.Record",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true
-  },
-  {
-    "name": "java.lang.System",
-    "methods": [{ "name": "console", "parameterTypes": [] }]
-  },
-  {
-    "name": "java.lang.reflect.RecordComponent",
-    "methods": [{ "name": "getName", "parameterTypes": [] }],
-    "queriedMethods": [{ "name": "getType", "parameterTypes": [] }]
-  },
-  {
-    "name": "java.nio.file.Path"
-  },
-  {
-    "name": "java.nio.file.Paths",
-    "methods": [
-      {
-        "name": "get",
-        "parameterTypes": ["java.lang.String", "java.lang.String[]"]
-      }
-    ]
-  },
-  {
-    "name": "java.sql.Connection"
-  },
-  {
-    "name": "java.sql.Date"
-  },
-  {
-    "name": "java.sql.Driver"
-  },
-  {
-    "name": "java.sql.DriverManager",
-    "queriedMethods": [
-      { "name": "getConnection", "parameterTypes": ["java.lang.String"] },
-      { "name": "getDriver", "parameterTypes": ["java.lang.String"] }
-    ]
-  },
-  {
-    "name": "java.sql.Time",
-    "queriedMethods": [{ "name": "<init>", "parameterTypes": ["long"] }]
-  },
-  {
-    "name": "java.sql.Timestamp",
-    "queriedMethods": [
-      { "name": "valueOf", "parameterTypes": ["java.lang.String"] }
-    ]
-  },
-  {
-    "name": "java.time.Duration",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.Instant",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.LocalDate",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.LocalDateTime",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.LocalTime",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.MonthDay",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.OffsetDateTime",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.OffsetTime",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.Period",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.Year",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.YearMonth",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "java.time.ZoneId",
-    "queriedMethods": [{ "name": "of", "parameterTypes": ["java.lang.String"] }]
-  },
-  {
-    "name": "java.time.ZoneOffset",
-    "queriedMethods": [{ "name": "of", "parameterTypes": ["java.lang.String"] }]
-  },
-  {
-    "name": "java.time.ZonedDateTime",
-    "queriedMethods": [
-      { "name": "parse", "parameterTypes": ["java.lang.CharSequence"] }
-    ]
-  },
-  {
-    "name": "picocli.CommandLine$AutoHelpMixin",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
-  },
-  {
-    "name": "picocli.CommandLine$HelpCommand",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.ConvertCommand",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true,
-    "methods": [{ "name": "<init>", "parameterTypes": [] }]
-  },
-  {
-    "name": "se.janderssonse.sariftool.cli.SarifToolCLI",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.model.sonar.Issue",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true,
-    "queryAllDeclaredConstructors": true,
-    "methods": [
-      { "name": "effortMinutes", "parameterTypes": [] },
-      { "name": "engineId", "parameterTypes": [] },
-      { "name": "primaryLocation", "parameterTypes": [] },
-      { "name": "ruleId", "parameterTypes": [] },
-      { "name": "secondaryLocations", "parameterTypes": [] },
-      { "name": "severity", "parameterTypes": [] },
-      { "name": "type", "parameterTypes": [] }
-    ]
-  },
-  {
-    "name": "se.janderssonse.sariftool.model.sonar.Issue$Severity",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.model.sonar.Issue$Type",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true
-  },
-  {
-    "name": "se.janderssonse.sariftool.model.sonar.Issues",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true,
-    "queryAllDeclaredConstructors": true,
-    "methods": [{ "name": "getResult", "parameterTypes": [] }]
-  },
-  {
-    "name": "se.janderssonse.sariftool.model.sonar.SonarLocation",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true,
-    "queryAllDeclaredConstructors": true,
-    "methods": [
-      { "name": "filePath", "parameterTypes": [] },
-      { "name": "message", "parameterTypes": [] },
-      { "name": "textRange", "parameterTypes": [] }
-    ]
-  },
-  {
-    "name": "se.janderssonse.sariftool.model.sonar.TextRange",
-    "allDeclaredFields": true,
-    "queryAllDeclaredMethods": true,
-    "queryAllDeclaredConstructors": true,
-    "methods": [
-      { "name": "endColumn", "parameterTypes": [] },
-      { "name": "endLine", "parameterTypes": [] },
-      { "name": "startColumn", "parameterTypes": [] },
-      { "name": "startLine", "parameterTypes": [] }
-    ]
-  },
-  {
-    "name": "sun.misc.Unsafe",
-    "fields": [{ "name": "theUnsafe" }],
-    "queriedMethods": [
-      { "name": "allocateInstance", "parameterTypes": ["java.lang.Class"] }
-    ]
-  }
+{
+  "name":"[Lcom.fasterxml.jackson.databind.deser.Deserializers;"
+},
+{
+  "name":"[Lcom.fasterxml.jackson.databind.ser.Serializers;"
+},
+{
+  "name":"com.fasterxml.jackson.databind.ext.Java7HandlersImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Class",
+  "methods":[{"name":"getRecordComponents","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Object",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.Record",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.System",
+  "methods":[{"name":"console","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.reflect.RecordComponent",
+  "methods":[{"name":"getName","parameterTypes":[] }],
+  "queriedMethods":[{"name":"getType","parameterTypes":[] }]
+},
+{
+  "name":"java.nio.file.Path"
+},
+{
+  "name":"java.nio.file.Paths",
+  "methods":[{"name":"get","parameterTypes":["java.lang.String","java.lang.String[]"] }]
+},
+{
+  "name":"java.sql.Connection"
+},
+{
+  "name":"java.sql.Date"
+},
+{
+  "name":"java.sql.Driver"
+},
+{
+  "name":"java.sql.DriverManager",
+  "queriedMethods":[
+    {"name":"getConnection","parameterTypes":["java.lang.String"] }, 
+    {"name":"getDriver","parameterTypes":["java.lang.String"] }
+  ]
+},
+{
+  "name":"java.sql.Time",
+  "queriedMethods":[{"name":"<init>","parameterTypes":["long"] }]
+},
+{
+  "name":"java.sql.Timestamp",
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.time.Duration",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.Instant",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.LocalDate",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.LocalDateTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.LocalTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.MonthDay",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.OffsetDateTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.OffsetTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.Period",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.Year",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.YearMonth",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.ZoneId",
+  "queriedMethods":[{"name":"of","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.time.ZoneOffset",
+  "queriedMethods":[{"name":"of","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.time.ZonedDateTime",
+  "queriedMethods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"picocli.CommandLine$AutoHelpMixin",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"picocli.CommandLine$HelpCommand",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"se.janderssonse.sariftool.cli.ConvertCommand",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"se.janderssonse.sariftool.cli.SarifToolCLI",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"se.janderssonse.sariftool.model.sonar.Issue",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"effortMinutes","parameterTypes":[] }, 
+    {"name":"engineId","parameterTypes":[] }, 
+    {"name":"primaryLocation","parameterTypes":[] }, 
+    {"name":"ruleId","parameterTypes":[] }, 
+    {"name":"secondaryLocations","parameterTypes":[] }, 
+    {"name":"severity","parameterTypes":[] }, 
+    {"name":"type","parameterTypes":[] }
+  ]
+},
+{
+  "name":"se.janderssonse.sariftool.model.sonar.Issue$Severity",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"se.janderssonse.sariftool.model.sonar.Issue$Type",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"se.janderssonse.sariftool.model.sonar.Issues",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"getResult","parameterTypes":[] }]
+},
+{
+  "name":"se.janderssonse.sariftool.model.sonar.SonarLocation",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"filePath","parameterTypes":[] }, 
+    {"name":"message","parameterTypes":[] }, 
+    {"name":"textRange","parameterTypes":[] }
+  ]
+},
+{
+  "name":"se.janderssonse.sariftool.model.sonar.TextRange",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"endColumn","parameterTypes":[] }, 
+    {"name":"endLine","parameterTypes":[] }, 
+    {"name":"startColumn","parameterTypes":[] }, 
+    {"name":"startLine","parameterTypes":[] }
+  ]
+},
+{
+  "name":"sun.misc.Unsafe",
+  "fields":[{"name":"theUnsafe"}],
+  "queriedMethods":[{"name":"allocateInstance","parameterTypes":["java.lang.Class"] }]
+}
 ]
