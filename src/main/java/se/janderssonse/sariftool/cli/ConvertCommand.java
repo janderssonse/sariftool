@@ -32,12 +32,9 @@ public final class ConvertCommand implements Runnable {
     @Option(names = { "-o", "--output" }, required = true, description = "A /path/to/dir/for/output/.")
     private Path outputDir;
 
-    /*
-     * @Option(names = { "-t",
-     * "--tool" }, showDefaultValue = Visibility.ALWAYS, defaultValue = "sonar",
-     * description = "Only sonar custom issue supper atm.")
-     * private String tool;
-     */
+    @Option(names = { "-t",
+            "--tool" }, showDefaultValue = Visibility.ALWAYS, defaultValue = "sonar", description = "Only sonar custom issue supper atm.")
+    private String tool;
 
     @Option(names = { "-e",
             "--excludepath" }, showDefaultValue = Visibility.ALWAYS, defaultValue = "src/test", description = "A path to exclude")
@@ -63,7 +60,8 @@ public final class ConvertCommand implements Runnable {
     }
 
     private List<Mapper> defaultMappers() {
-        Mapper sonarIssueMapper = MapperFactory.getMapper(MapperType.SONAR);
+        MapperType format = MapperType.valueOf(tool.toUpperCase());
+        Mapper sonarIssueMapper = MapperFactory.getMapper(format);
         Mapper logMapper = MapperFactory.getMapper(MapperType.LOG);
         return List.of(logMapper, sonarIssueMapper);
 

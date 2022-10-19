@@ -11,4 +11,15 @@ public record TextRange(
         Integer endLine,
         Optional<Integer> startColumn,
         Optional<Integer> endColumn) {
+
+    @Override
+    public final String toString() {
+        return String.format(
+                "%s[%nmessage=%s%nfilePath=%s%ntextRange=%s%n%n]",
+                this.getClass().getName(),
+                startLine != null ? startLine : "",
+                endLine != null ? endLine : "",
+                startColumn.isPresent() ? startColumn.get() : "",
+                endColumn.isPresent() ? endColumn.get() : "");
+    }
 }

@@ -50,7 +50,7 @@ public final class Util {
 
     public static boolean schemaValidate(final Path sarifFile) throws IllegalArgumentException {
         try {
-            InputStream s = Util.class.getResourceAsStream("/sarif-json-schema.json");
+            InputStream s = Util.class.getResourceAsStream("/sarif-schema-2.1.0.json");
 
             String schematext = new String(s.readAllBytes(), StandardCharsets.UTF_8);
             String filetext = Files.readString(sarifFile);

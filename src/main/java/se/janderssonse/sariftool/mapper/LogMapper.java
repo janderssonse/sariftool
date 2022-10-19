@@ -14,7 +14,7 @@ import se.janderssonse.sariftool.model.sarif.Rule;
 
 public final class LogMapper implements Mapper {
 
- private static final Logger LOG = Logger.getLogger(LogMapper.class.getName());
+  private static final Logger LOG = Logger.getLogger(LogMapper.class.getName());
 
   @Override
   public void onFinding(final Result result) {
@@ -43,7 +43,7 @@ public final class LogMapper implements Mapper {
 
   @Override
   public String summary() {
-    return null;
+    return "";
   }
 
   @Override

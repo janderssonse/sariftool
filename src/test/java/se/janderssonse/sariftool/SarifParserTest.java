@@ -60,7 +60,7 @@ class SarifParserTest {
   @DisplayName("Non SARIF file does not invoke any callback function")
   void execute_NonSarifFile_CallbackNotInvoked() throws URISyntaxException, IOException {
     final Mapper mockedParserCB = Mockito.mock(Mapper.class);
-    final Path exampleSarifFile = Paths.get(ClassLoader.getSystemResource("anyOther.json").toURI());
+    final Path exampleSarifFile = Paths.get(ClassLoader.getSystemResource("ajsonfile.json").toURI());
 
     final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
       SarifParser.map(exampleSarifFile, List.of(mockedParserCB), Paths.get(""), Collections.emptyList());
@@ -79,9 +79,9 @@ class SarifParserTest {
   @DisplayName("Happy Case parse example.sarif")
   void execute_testFile_HappyCase() throws URISyntaxException, IOException {
     final Mapper mockedParserCB = Mockito.mock(Mapper.class);
-    final Path exampleSarifFile = Paths.get(ClassLoader.getSystemResource("example.sarif").toURI());
+    final Path exampleSarifFile = Paths.get(ClassLoader.getSystemResource("exampleWithTestDir.sarif").toURI());
 
-    SarifParser.map(exampleSarifFile, List.of(mockedParserCB), Paths.get(""), Collections.emptyList());
+    SarifParser.map(exampleSarifFile, List.of(mockedParserCB), Paths.get(""), List.of("src/test"));
 
     Mockito.verify(mockedParserCB, Mockito.times(1)).onVersion(versionCaptor.capture());
     assertEquals("2.1.0", versionCaptor.getValue());
@@ -98,8 +98,8 @@ class SarifParserTest {
     verifyRule_EmptySynchBlock(rulesCaptured.get(2));
     verifyRule_impossibleArrayCast(rulesCaptured.get(3));
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onFinding(resultCaptor.capture());
-    verifyResult(resultCaptor.getValue());
+    Mockito.verify(mockedParserCB, Mockito.times(2)).onFinding(resultCaptor.capture());
+    verifyResult(resultCaptor.getAllValues().get(0));
   }
 
   private void verifyResult(Result result) {
