@@ -9,9 +9,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 public class JsonWrapper {
@@ -21,7 +24,9 @@ public class JsonWrapper {
 
     private static ObjectMapper getMapper() {
         if (mapper == null) {
-            mapper = new ObjectMapper().registerModule(new Jdk8Module()).setSerializationInclusion(Include.NON_ABSENT);
+            mapper = JsonMapper.builder().addModule(new Jdk8Module())
+                    .serializationInclusion(Include.NON_ABSENT)
+                    .configure(MapperFeature.SORT_CREATOR_PROPERTIES_FIRST, true).build();
         }
         return mapper;
     }

@@ -1,4 +1,3 @@
-// SPDX-FileCopyrightText: 2021 Baloise Group
 // SPDX-FileCopyrightText: 2022 Josef Andersson
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,12 +10,10 @@ import java.io.File;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import de.dm.infrastructure.logcapture.LogCapture;
 import picocli.CommandLine;
 import se.janderssonse.sariftool.util.JsonWrapper;
 import se.janderssonse.sariftool.util.Util;
@@ -24,8 +21,7 @@ import se.janderssonse.sariftool.util.Util;
 class ConvertCommandTest {
     @TempDir
     File tmpDir;
-    @RegisterExtension
-    public LogCapture logCapture = LogCapture.forCurrentPackage();
+
 
     @Test
     void testInvalidSarifFile() throws IllegalArgumentException {

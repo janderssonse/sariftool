@@ -1,4 +1,3 @@
-// SPDX-FileCopyrightText: 2021 Baloise Group
 // SPDX-FileCopyrightText: 2022 Josef Andersson
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,10 +14,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
-import se.janderssonse.sariftool.mapper.Mapper;
 import se.janderssonse.sariftool.model.sarif.Driver;
 import se.janderssonse.sariftool.model.sarif.Location;
 import se.janderssonse.sariftool.model.sarif.Region;
@@ -63,6 +64,7 @@ public final class SarifParser {
     static final String ELEMENT_SHORT_DESCRIPTION = "shortDescription";
     static final String ELEMENT_START_COLUMN = "startColumn";
     static final String ELEMENT_START_LINE = "startLine";
+    static final String ELEMENT_END_LINE = "endLine";
     static final String ELEMENT_TAGS = "tags";
     static final String ELEMENT_TEXT = "text";
     static final String ELEMENT_TOOL = "tool";
@@ -70,23 +72,69 @@ public final class SarifParser {
     static final String ELEMENT_URI_BASE_ID = "uriBaseId";
     static final String ELEMENT_VERSION = "version";
 
-    private SarifParser() {
+    private Optional<String> version = Optional.empty();
+    private Optional<String> schema = Optional.empty();
+    private boolean validated;
+    private Path parseFile;
+
+    private Optional<Driver> driverDto;
+    private List<Rule> rules = List.of();
+    private List<Result> results = List.of();
+
+    public boolean validated() {
+        return validated;
     }
 
-    /**
-     * Entry point to parse provided SarifFile. Expected file should be of schema
-     * https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json
-     * For the result handling multiple
-     * callback handler implementing
-     * the @{@link Mapper} can be provided.
-     *
-     * @throws FileNotFoundException when sarifInputFile is not present
-     */
-    public static void map(final Path sarifInputFile,
-            final List<Mapper> mappers,
-            final Path target,
-            final List<String> excludedPaths)
-            throws IOException, FileNotFoundException, IllegalArgumentException {
+    public Path sarifFile() {
+        return parseFile;
+    }
+
+    public Optional<String> getVersion() {
+        return version;
+    }
+
+    public Optional<String> getSchema() {
+        return schema;
+    }
+
+    public Optional<Driver> getDriver() {
+        return driverDto;
+    }
+
+    public List<Result> getResults() {
+        return results;
+    }
+
+    public List<Rule> getRules() {
+        return rules;
+    }
+
+    public SarifParser(final Path sarifFile) {
+        try {
+            LOG.info("Parsing: ".concat(sarifFile.toAbsolutePath().toString()));
+            parseFile = sarifFile;
+
+            map(sarifFile);
+
+            if (validated) {
+                LOG.fine(String.format("Parsed %d rules, %d results from file %s.", rules.size(), results.size(),
+                        sarifFile.toAbsolutePath().toString()));
+            } else {
+                LOG.fine(String.format("Parsed 0 rules, 0 results from invalid file %s.",
+                        sarifFile.toAbsolutePath().toString()));
+            }
+        } catch (IllegalArgumentException | IOException e) {
+            LOG.warning("Failed parsing: " + e.getMessage());
+            LOG.severe("Failed parsing due to : " + e);
+        }
+    }
+
+    private void parseRun(final JsonNode node) {
+        parseRules(node);
+        parseResults(node);
+    }
+
+    public void map(final Path sarifInputFile) throws IOException, FileNotFoundException, IllegalArgumentException {
 
         try (FileReader reader = new FileReader(sarifInputFile.toFile())) {
 
@@ -94,48 +142,36 @@ public final class SarifParser {
 
             if (Util.schemaValidate(sarifInputFile)) {
 
+                validated = true;
+
                 if (rootNode.has(ELEMENT_VERSION)) {
-                    final Optional<String> version = asString(rootNode, SarifParser.ELEMENT_VERSION);
-                    mappers.forEach(cb -> cb.onVersion(version.get()));
+                    version = asString(rootNode, SarifParser.ELEMENT_VERSION);
                 }
 
                 if (rootNode.has(ELEMENT_SCHEMA)) {
-                    final Optional<String> schema = asString(rootNode, SarifParser.ELEMENT_SCHEMA);
-                    mappers.forEach(cb -> cb.onSchema(schema.get()));
+                    schema = asString(rootNode, SarifParser.ELEMENT_SCHEMA);
                 }
 
                 if (rootNode.has(ELEMENT_RUNS)) {
                     for (JsonNode singleRun : rootNode.get(ELEMENT_RUNS)) {
-                        parseRun(singleRun, mappers);
+                        parseRun(singleRun);
                     }
                 }
             }
         }
 
-        mappers.forEach(m -> LOG.fine(m.summary()));
-
-        mappers.forEach(m -> {
-            m.writeResult(sarifInputFile, target, excludedPaths);
-        });
-
     }
 
-    private static void parseRun(final JsonNode node, final List<Mapper> mappers) {
-        parseRules(node, mappers);
-        parseResults(node, mappers);
-    }
-
-    private static void parseRules(final JsonNode node, final List<Mapper> mappers) {
+    private void parseRules(final JsonNode node) {
         if (node.has(ELEMENT_TOOL)) {
             final JsonNode toolNode = node.get(ELEMENT_TOOL);
 
             if (toolNode.has(ELEMENT_DRIVER)) {
                 final JsonNode driver = toolNode.get(ELEMENT_DRIVER);
-                final Optional<Driver> driverDto = toDriver(driver);
-                mappers.forEach(cb -> cb.onDriver(driverDto.get()));
+                driverDto = toDriver(driver);
 
                 if (!driver.isMissingNode() && driver.has(ELEMENT_RULES)) {
-                    processRules(driver.get(ELEMENT_RULES), mappers);
+                    processRules(driver.get(ELEMENT_RULES));
                 }
             }
 
@@ -144,25 +180,23 @@ public final class SarifParser {
                 extensions.forEach(extension -> {
                     final JsonNode ext = extension;
                     if (ext.has(ELEMENT_RULES)) {
-                        processRules(ext.get(ELEMENT_RULES), mappers);
+                        processRules(ext.get(ELEMENT_RULES));
                     }
                 });
             }
         }
     }
 
-    private static void processRules(final JsonNode node, final List<Mapper> mappers) {
-        node.forEach(ruleNode -> {
-            final Rule rule = new Rule(
-                    asString(ruleNode, ELEMENT_ID), asString(ruleNode, ELEMENT_NAME),
-                    toTextElement(ruleNode, ELEMENT_SHORT_DESCRIPTION),
-                    toTextElement(ruleNode, ELEMENT_FULL_DESCRIPTION), toRuleLevel(ruleNode),
-                    toRuleProperties(ruleNode));
-            mappers.forEach(cb -> cb.onRule(rule));
-        });
+    private void processRules(final JsonNode node) {
+        Stream<JsonNode> s = StreamSupport.stream(node.spliterator(), false);
+        rules = s.map(ruleNode -> new Rule(
+                asString(ruleNode, ELEMENT_ID), asString(ruleNode, ELEMENT_NAME),
+                toTextElement(ruleNode, ELEMENT_SHORT_DESCRIPTION),
+                toTextElement(ruleNode, ELEMENT_FULL_DESCRIPTION), toRuleLevel(ruleNode),
+                toRuleProperties(ruleNode))).toList();
     }
 
-    private static Optional<Driver> toDriver(final JsonNode node) {
+    private Optional<Driver> toDriver(final JsonNode node) {
         if (node.isMissingNode()) {
             return Optional.empty();
         }
@@ -171,7 +205,7 @@ public final class SarifParser {
                 asString(node, ELEMENT_SEMANTIC_VERSION)));
     }
 
-    private static Optional<Rule.Level> toRuleLevel(final JsonNode node) {
+    private Optional<Rule.Level> toRuleLevel(final JsonNode node) {
         if (node.has(ELEMENT_DEFAULT_CONFIGURATION)) {
             final JsonNode defaultConfig = node.get(ELEMENT_DEFAULT_CONFIGURATION);
             if (defaultConfig.has(ELEMENT_LEVEL)) {
@@ -188,7 +222,7 @@ public final class SarifParser {
         return Optional.empty();
     }
 
-    private static Optional<RuleProperties> toRuleProperties(final JsonNode node) {
+    private Optional<RuleProperties> toRuleProperties(final JsonNode node) {
         if (node.has(ELEMENT_PROPERTIES)) {
             final JsonNode properties = node.get(ELEMENT_PROPERTIES);
             return Optional.of(new RuleProperties(
@@ -200,17 +234,17 @@ public final class SarifParser {
         return Optional.empty();
     }
 
-    private static Optional<String> asString(final JsonNode node, final String elementId) {
+    private Optional<String> asString(final JsonNode node, final String elementId) {
         return !node.isMissingNode() && node.has(elementId) ? Optional.of(node.get(elementId).asText())
                 : Optional.empty();
     }
 
-    private static Optional<Integer> asInt(final JsonNode node, final String elementId) {
+    private Optional<Integer> asInt(final JsonNode node, final String elementId) {
         return !node.isMissingNode() && node.has(elementId) ? Optional.of(node.get(elementId).asInt())
                 : Optional.empty();
     }
 
-    private static Optional<RuleProperties.Severity> toSeverity(final JsonNode node) {
+    private Optional<RuleProperties.Severity> toSeverity(final JsonNode node) {
         if (node.has(ELEMENT_PROBLEM_SEVERITY)) {
             final Optional<String> severityAsString = asString(node, ELEMENT_PROBLEM_SEVERITY);
             try {
@@ -225,7 +259,7 @@ public final class SarifParser {
         return Optional.empty();
     }
 
-    private static ArrayList<String> toTags(final JsonNode node) {
+    private ArrayList<String> toTags(final JsonNode node) {
         final HashSet<String> result = new HashSet<>();
         if (node.has(ELEMENT_TAGS)) {
             node.get(ELEMENT_TAGS).forEach(t -> result.add(t.asText()));
@@ -233,9 +267,10 @@ public final class SarifParser {
         return new ArrayList<>(result);
     }
 
-    private static void parseResults(final JsonNode node, final List<Mapper> mappers) {
+    private void parseResults(final JsonNode node) {
         if (node.has(ELEMENT_RESULTS)) {
-            node.get(ELEMENT_RESULTS).forEach(result -> {
+            Stream<JsonNode> a = StreamSupport.stream(node.get(ELEMENT_RESULTS).spliterator(), false);
+            results = a.map(result -> {
                 final JsonNode resultJsonObject = result;
 
                 Optional<Integer> resultIndex = asInt(resultJsonObject, ELEMENT_RULE_INDEX);
@@ -245,18 +280,21 @@ public final class SarifParser {
                 }
                 Result resultDto = new Result(asString(resultJsonObject, ELEMENT_RULE_ID), resultIndex,
                         toTextElement(resultJsonObject, ELEMENT_MESSAGE), Optional.of(toLocations(resultJsonObject)));
-                mappers.forEach(cb -> cb.onFinding(resultDto));
-            });
+                return resultDto;
+            }).toList();
+
+        } else {
+            results = List.of();
         }
     }
 
-    private static Optional<String> toTextElement(final JsonNode node, final String parentProperty) {
+    private Optional<String> toTextElement(final JsonNode node, final String parentProperty) {
         JsonNode element = node.get(parentProperty);
         JsonNode ob = element != null ? element : JsonNodeFactory.instance.objectNode();
         return asString(ob, ELEMENT_TEXT);
     }
 
-    private static List<Location> toLocations(final JsonNode node) {
+    private List<Location> toLocations(final JsonNode node) {
         final ArrayList<Location> result = new ArrayList<>();
 
         if (node.has(ELEMENT_LOCATIONS)) {
@@ -280,9 +318,10 @@ public final class SarifParser {
         return result;
     }
 
-    private static Region toRegion(final JsonNode node) {
+    private Region toRegion(final JsonNode node) {
         return new Region(
                 asInt(node, ELEMENT_START_LINE).get(),
+                asInt(node, ELEMENT_END_LINE),
                 asInt(node, ELEMENT_START_COLUMN),
                 asInt(node, ELEMENT_END_COLUMN));
     }

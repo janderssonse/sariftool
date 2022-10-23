@@ -1,0 +1,21 @@
+{
+  "issues": [
+    {
+      "engineId": "driverorg drivername v10.0.0",
+      "ruleId": "aruleid",
+      "severity": "CRITICAL",
+      "type": "VULNERABILITY",
+      "primaryLocation": {
+        "message": "amessage",
+        "filePath": "src/code.java",
+        "textRange": {
+          "startLine": 1,
+          "endLine": 26,
+          "startColumn": 2,
+          "endColumn": 3
+        }
+      },
+      "effortMinutes": 0
+    }
+  ]
+}

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public record TextRange(
         Integer startLine,
-        Integer endLine,
+        Optional<Integer> endLine,
         Optional<Integer> startColumn,
         Optional<Integer> endColumn) {
 
@@ -18,7 +18,7 @@ public record TextRange(
                 "%s[%nmessage=%s%nfilePath=%s%ntextRange=%s%n%n]",
                 this.getClass().getName(),
                 startLine != null ? startLine : "",
-                endLine != null ? endLine : "",
+                endLine.isPresent() ? endLine.get() : "",
                 startColumn.isPresent() ? startColumn.get() : "",
                 endColumn.isPresent() ? endColumn.get() : "");
     }

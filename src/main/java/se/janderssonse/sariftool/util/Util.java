@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,10 +40,10 @@ public final class Util {
                     .map(it -> it.toString())
                     .filter(path -> path.endsWith(suffix))
                     .map(path -> Paths.get(path))
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (IOException e) {
             LOG.severe("IO failed" + e.toString());
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

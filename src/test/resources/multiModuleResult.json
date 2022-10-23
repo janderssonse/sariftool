@@ -7,10 +7,9 @@
       "type": "CODE_SMELL",
       "primaryLocation": {
         "message": "This method overrides [TexteInterface.getText](1); it is advisable to add an Override annotation.",
-        "filePath": "src/main/java/org/test/Adapter.java",
+        "filePath": "Module1/src/main/java/org/test/Adapter.java",
         "textRange": {
           "startLine": 105,
-          "endLine": 105,
           "startColumn": 17,
           "endColumn": 24
         }
@@ -24,10 +23,9 @@
       "type": "CODE_SMELL",
       "primaryLocation": {
         "message": "This method overrides [TexteInterface.getTextZuCode](1); it is advisable to add an Override annotation.",
-        "filePath": "src/main/java/org/test/Adapter2.java",
+        "filePath": "Module1/src/main/java/org/test/Adapter2.java",
         "textRange": {
           "startLine": 125,
-          "endLine": 125,
           "startColumn": 17,
           "endColumn": 30
         }
@@ -41,10 +39,9 @@
       "type": "CODE_SMELL",
       "primaryLocation": {
         "message": "This method overrides [TexteInterface.getTextZuCode](1); it is advisable to add an Override annotation.",
-        "filePath": "src/gen/java/org/test/MyDto.java",
+        "filePath": "Module2/src/gen/java/org/test/MyDto.java",
         "textRange": {
           "startLine": 156,
-          "endLine": 156,
           "startColumn": 17,
           "endColumn": 30
         }

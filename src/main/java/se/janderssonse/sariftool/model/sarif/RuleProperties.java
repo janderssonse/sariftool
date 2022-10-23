@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 public record RuleProperties(
         Optional<String> id,
         Optional<String> name,
@@ -36,4 +37,5 @@ public record RuleProperties(
         error,
         recommendation
     }
+
 }

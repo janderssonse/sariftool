@@ -44,6 +44,13 @@ Convert SARIF format to other formats
   -V, --version   Print version information and exit.
 ```
 
+## Format References
+
+- [SARIF Specification](https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html)
+- [SARIF JSON chema](https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json)
+- [SonarQube Generic Issue Format](https://docs.sonarqube.org/latest/analysis/generic-issue/)
+- [SonarQube Issue](https://docs.sonarqube.org/latest/user-guide/issues/)
+
 ## Want to Contribute?
 ---
 

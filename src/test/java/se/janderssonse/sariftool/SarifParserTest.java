@@ -5,16 +5,10 @@
 
 package se.janderssonse.sariftool;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Captor;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import se.janderssonse.sariftool.mapper.Mapper;
 import se.janderssonse.sariftool.model.sarif.Driver;
 import se.janderssonse.sariftool.model.sarif.Location;
 import se.janderssonse.sariftool.model.sarif.Region;
@@ -22,235 +16,216 @@ import se.janderssonse.sariftool.model.sarif.Result;
 import se.janderssonse.sariftool.model.sarif.Rule;
 import se.janderssonse.sariftool.model.sarif.RuleProperties;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class SarifParserTest {
 
-  @Captor
-  ArgumentCaptor<String> versionCaptor;
+    @Test
+    void when_invalid_sarif_given_parsing_did_not_occur() throws URISyntaxException, IOException {
 
-  @Captor
-  ArgumentCaptor<String> schemaCaptor;
+        final Path sarifFile = Paths.get(ClassLoader.getSystemResource("ajsonfile.json").toURI());
+        SarifParser parser = new SarifParser(sarifFile);
 
-  @Captor
-  ArgumentCaptor<Driver> driverCaptor;
+        assertFalse(parser.validated());
+        assertTrue(parser.getSchema().isEmpty());
+        assertTrue(parser.getVersion().isEmpty());
 
-  @Captor
-  ArgumentCaptor<Rule> ruleCaptor;
+    }
 
-  @Captor
-  ArgumentCaptor<Result> resultCaptor;
+    @Test
+    void when_nonexisting_file_given_parsing_did_not_occur() {
 
-  @Test
-  @DisplayName("Non SARIF file does not invoke any callback function")
-  void execute_NonSarifFile_CallbackNotInvoked() throws URISyntaxException, IOException {
-    final Mapper mockedParserCB = Mockito.mock(Mapper.class);
-    final Path exampleSarifFile = Paths.get(ClassLoader.getSystemResource("ajsonfile.json").toURI());
+        SarifParser parser = new SarifParser(Paths.get("null"));
 
-    final Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-      SarifParser.map(exampleSarifFile, List.of(mockedParserCB), Paths.get(""), Collections.emptyList());
-    });
-    assertTrue(exception.getMessage().startsWith("Validation failed:"));
+        assertFalse(parser.validated());
+        assertTrue(parser.getSchema().isEmpty());
+        assertTrue(parser.getVersion().isEmpty());
+        assertTrue(parser.getResults().isEmpty());
+    }
 
-    assertAll(
-        () -> Mockito.verify(mockedParserCB, Mockito.never()).onFinding(ArgumentMatchers.any(Result.class)),
-        () -> Mockito.verify(mockedParserCB, Mockito.never()).onVersion(ArgumentMatchers.anyString()),
-        () -> Mockito.verify(mockedParserCB, Mockito.never()).onSchema(ArgumentMatchers.anyString()),
-        () -> Mockito.verify(mockedParserCB, Mockito.never()).onDriver(ArgumentMatchers.any(Driver.class)),
-        () -> Mockito.verify(mockedParserCB, Mockito.never()).onRule(ArgumentMatchers.any(Rule.class)));
-  }
+    @Test
+    void when_valid_sariffile_given_it_was_parsed() throws Exception {
 
-  @Test
-  @DisplayName("Happy Case parse example.sarif")
-  void execute_testFile_HappyCase() throws URISyntaxException, IOException {
-    final Mapper mockedParserCB = Mockito.mock(Mapper.class);
-    final Path exampleSarifFile = Paths.get(ClassLoader.getSystemResource("exampleWithTestDir.sarif").toURI());
+        final Path sarifFile = Paths.get(ClassLoader.getSystemResource("exampleWithTestDir.sarif").toURI());
+        SarifParser parser = new SarifParser(sarifFile);
 
-    SarifParser.map(exampleSarifFile, List.of(mockedParserCB), Paths.get(""), List.of("src/test"));
+        assertTrue(parser.validated());
+        assertEquals("https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+                parser.getSchema().get());
+        assertEquals(2, parser.getResults().size());
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onVersion(versionCaptor.capture());
-    assertEquals("2.1.0", versionCaptor.getValue());
+        assertDriver("2.3.3", parser.getDriver().get());
+        assertRuleEmptySynchBlock(parser.getRules().get(2));
+        assertRuleImpossibleArrayCast(parser.getRules().get(3));
+        assertResult(parser.getResults().get(0));
+    }
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onSchema(schemaCaptor.capture());
-    assertEquals("https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
-        schemaCaptor.getValue());
+    @Test
+    void when_valid_sariffile_with_rules_in_extension_given_it_was_parsed() throws Exception {
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onDriver(driverCaptor.capture());
-    verifyDriver(driverCaptor.getValue(), "2.3.3");
+        final Path sarifFile = Paths.get(ClassLoader.getSystemResource("rulesInExtensions.sarif").toURI());
+        SarifParser parser = new SarifParser(sarifFile);
 
-    Mockito.verify(mockedParserCB, Mockito.times(10)).onRule(ruleCaptor.capture());
-    final List<Rule> rulesCaptured = ruleCaptor.getAllValues();
-    verifyRule_EmptySynchBlock(rulesCaptured.get(2));
-    verifyRule_impossibleArrayCast(rulesCaptured.get(3));
+        assertEquals("2.1.0", parser.getVersion().get());
 
-    Mockito.verify(mockedParserCB, Mockito.times(2)).onFinding(resultCaptor.capture());
-    verifyResult(resultCaptor.getAllValues().get(0));
-  }
+        assertEquals(
+                "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+                parser.getSchema().get());
 
-  private void verifyResult(Result result) {
-    assertEquals("java/misleading-indentation", result.ruleId().get());
-    assertEquals(9, result.ruleIndex().get());
-    assertEquals(
-        "Indentation suggests that [the next statement](1) belongs to [the control structure](2), but this is not the case; consider adding braces or adjusting indentation.",
-        result.message().get());
-    assertNotNull(result.locations());
-    assertEquals(1, result.locations().get().size());
-    final Location location = result.locations().get().get(0);
-    assertEquals("src/main/java/org/arburk/fishbone/infrastructure/service/FishRepository.java", location.uri());
-    assertEquals("%SRCROOT%", location.uriBaseId().get());
-    assertEquals(0, location.index().get());
-    assertNotNull(location.region());
-    final Region region = location.region().get();
-    assertEquals(26, region.startLine());
-    assertEquals(9, region.startColumn().get());
-    assertEquals(13, region.endColumn().get());
-  }
+        assertDriver("2.5.5", parser.getDriver().get());
 
-  private void verifyRule_impossibleArrayCast(Rule impossibleArrayCast) {
-    assertEquals("java/impossible-array-cast", impossibleArrayCast.id().get());
-    assertEquals("java/impossible-array-cast", impossibleArrayCast.name().get());
-    assertEquals("Impossible array cast", impossibleArrayCast.shortDescription().get());
-    assertEquals(
-        "Trying to cast an array of a particular type as an array of a subtype causes a 'ClassCastException' at runtime.",
-        impossibleArrayCast.fullDescription().get());
-    assertNotNull(impossibleArrayCast.level());
-    assertEquals(Rule.Level.ERROR, impossibleArrayCast.level().get());
-    assertNotNull(impossibleArrayCast.properties());
-    final RuleProperties icProperties = impossibleArrayCast.properties().get();
-    assertEquals("java/impossible-array-cast", icProperties.id().get());
-    assertEquals("Impossible array cast", icProperties.name().get());
-    assertEquals(
-        "Trying to cast an array of a particular type as an array of a subtype causes a\n              'ClassCastException' at runtime.",
-        icProperties.description().get());
-    assertEquals("low", icProperties.precision().get());
-    assertEquals("problem", icProperties.kind().get());
-    assertEquals(RuleProperties.Severity.error, icProperties.severity().get());
-    final ArrayList<String> icTags = icProperties.tags().get();
-    assertEquals(4, icTags.size());
-    assertEquals(1, icTags.stream().filter("reliability"::equals).count());
-    assertEquals(1, icTags.stream().filter("correctness"::equals).count());
-    assertEquals(1, icTags.stream().filter("logic"::equals).count());
-    assertEquals(1, icTags.stream().filter("external/cwe/cwe-704"::equals).count());
-  }
+        assertEquals(166, parser.getRules().size());
 
-  private void verifyRule_EmptySynchBlock(Rule emptySynchBlock) {
-    assertEquals("java/empty-synchronized-block", emptySynchBlock.id().get());
-    assertEquals("java/empty-synchronized-block", emptySynchBlock.name().get());
-    assertEquals("Empty synchronized block", emptySynchBlock.shortDescription().get());
-    assertEquals(
-        "Empty synchronized blocks may indicate the presence of incomplete code or incorrect synchronization, and may lead to concurrency problems.",
-        emptySynchBlock.fullDescription().get());
-    assertEquals(emptySynchBlock.level(), Optional.empty());
-    assertNotNull(emptySynchBlock.properties().get());
-    final RuleProperties esbProperties = emptySynchBlock.properties().get();
-    assertEquals("java/empty-synchronized-block", esbProperties.id().get());
-    assertEquals("Empty synchronized block", esbProperties.name().get());
-    assertEquals(
-        "Empty synchronized blocks may indicate the presence of\n              incomplete code or incorrect synchronization, and may lead to concurrency problems.",
-        esbProperties.description().get());
-    assertEquals("low", esbProperties.precision().get());
-    assertEquals("problem", esbProperties.kind().get());
-    assertEquals(RuleProperties.Severity.warning, esbProperties.severity().get());
-    final ArrayList<String> esbTags = esbProperties.tags().get();
-    assertEquals(5, esbTags.size());
-    assertEquals(1, esbTags.stream().filter("reliability"::equals).count());
-    assertEquals(1, esbTags.stream().filter("correctness"::equals).count());
-    assertEquals(1, esbTags.stream().filter("concurrency"::equals).count());
-    assertEquals(1, esbTags.stream().filter("language-features"::equals).count());
-    assertEquals(1, esbTags.stream().filter("external/cwe/cwe-585"::equals).count());
-  }
+        final Rule sqlInjectionRule = parser.getRules().get(0);
+        assertEquals("java/sql-injection", sqlInjectionRule.id().get());
+        assertEquals("java/sql-injection", sqlInjectionRule.name().get());
+        assertEquals("Query built from user-controlled sources",
+                sqlInjectionRule.shortDescription().get());
+        assertEquals(
+                "Building a SQL or Java Persistence query from user-controlled sources is vulnerable to insertion of malicious code by the user.",
+                sqlInjectionRule.fullDescription().get());
+        assertEquals(Rule.Level.ERROR, sqlInjectionRule.level().get());
 
-  private void verifyDriver(Driver driverCaptured, String versionExpected) {
-    assertEquals("GitHub", driverCaptured.organization().get());
-    assertEquals("CodeQL", driverCaptured.name().get());
-    assertEquals(versionExpected, driverCaptured.semanticVersion().get());
-  }
+        final RuleProperties ruleProperties = sqlInjectionRule.properties().get();
+        assertEquals("java/sql-injection", ruleProperties.id().get());
+        assertEquals("Query built from user-controlled sources",
+                ruleProperties.name().get());
+        assertEquals(
+                "Building a SQL or Java Persistence query from user-controlled sources is vulnerable to insertion of\n              malicious code by the user.",
+                ruleProperties.description().get());
+        assertEquals("high", ruleProperties.precision().get());
+        assertEquals("path-problem", ruleProperties.kind().get());
+        assertEquals(RuleProperties.Severity.error, ruleProperties.severity().get());
 
-  @Test
-  @DisplayName("Check FileNotFoundException on inexistent input file")
-  void execute_wrongFile_FNFException() {
-    final Mapper mockedParserCB = Mockito.mock(Mapper.class);
-    assertThrows(FileNotFoundException.class,
-        () -> SarifParser.map(Paths.get(""), List.of(mockedParserCB), Paths.get(""), Collections.emptyList()));
-  }
+        final List<String> esbTags = ruleProperties.tags().get();
+        assertEquals(3, esbTags.size());
+        assertEquals(1, esbTags.stream().filter("security"::equals).count());
+        assertEquals(1,
+                esbTags.stream().filter("external/cwe/cwe-089"::equals).count());
+        assertEquals(1,
+                esbTags.stream().filter("external/cwe/cwe-564"::equals).count());
 
-  @Test
-  @DisplayName("Verify extension rules are properly parsed using rulesInExtensions.sarif")
-  void execute_rulesInExtensionsTest() throws URISyntaxException, IOException {
-    final Mapper mockedParserCB = Mockito.mock(Mapper.class);
-    final Path exampleSarifFile = Paths.get(ClassLoader.getSystemResource("rulesInExtensions.sarif").toURI());
+        final Result result = parser.getResults().get(0);
+        assertEquals("java/input-resource-leak", result.ruleId().get());
+        assertEquals(64, result.ruleIndex().get());
+        assertEquals("This FileReader is not always closed on method exit.",
+                result.message().get());
+        assertEquals(1, result.locations().get().size());
 
-    SarifParser.map(exampleSarifFile, List.of(mockedParserCB), Paths.get(""), Collections.emptyList());
+        final Location location = result.locations().get().get(0);
+        assertEquals(
+                "src/main/java/com/baloise/open/maven/codeql/sarif/SarifParser.java",
+                location.uri());
+        assertEquals("%SRCROOT%", location.uriBaseId().get());
+        assertEquals(0, location.index().get());
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onVersion(versionCaptor.capture());
-    assertEquals("2.1.0", versionCaptor.getValue());
+        final Region region = location.region().get();
+        assertEquals(84, region.startLine());
+        assertEquals(58, region.startColumn().get());
+        assertEquals(88, region.endColumn().get());
+    }
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onSchema(schemaCaptor.capture());
-    assertEquals("https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
-        schemaCaptor.getValue());
+    private void assertResult(Result result) {
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onDriver(driverCaptor.capture());
-    verifyDriver(driverCaptor.getValue(), "2.5.5");
+        assertEquals("java/misleading-indentation", result.ruleId().get());
+        assertEquals(9, result.ruleIndex().get());
+        assertEquals(
+                "Indentation suggests that [the next statement](1) belongs to [the control structure](2), but this is not the case; consider adding braces or adjusting indentation.",
+                result.message().get());
+        assertEquals(1, result.locations().get().size());
 
-    Mockito.verify(mockedParserCB, Mockito.times(166)).onRule(ruleCaptor.capture());
-    final List<Rule> rulesCaptured = ruleCaptor.getAllValues();
+        final Location location = result.locations().get().get(0);
+        assertEquals(
+                "src/main/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
+                location.uri());
+        assertEquals("%SRCROOT%", location.uriBaseId().get());
+        assertEquals(0, location.index().get());
 
-    assertEquals(166, rulesCaptured.size());
+        final Region region = location.region().get();
+        assertEquals(26, region.startLine());
+        assertEquals(9, region.startColumn().get());
+        assertEquals(13, region.endColumn().get());
+    }
 
-    final Rule sqlInjection = rulesCaptured.get(0);
-    assertEquals("java/sql-injection", sqlInjection.id().get());
-    assertEquals("java/sql-injection", sqlInjection.name().get());
-    assertEquals("Query built from user-controlled sources", sqlInjection.shortDescription().get());
-    assertEquals(
-        "Building a SQL or Java Persistence query from user-controlled sources is vulnerable to insertion of malicious code by the user.",
-        sqlInjection.fullDescription().get());
-    assertEquals(Rule.Level.ERROR, sqlInjection.level().get());
-    assertNotNull(sqlInjection.properties());
-    final RuleProperties ruleProperties = sqlInjection.properties().get();
-    assertEquals("java/sql-injection", ruleProperties.id().get());
-    assertEquals("Query built from user-controlled sources", ruleProperties.name().get());
-    assertEquals(
-        "Building a SQL or Java Persistence query from user-controlled sources is vulnerable to insertion of\n              malicious code by the user.",
-        ruleProperties.description().get());
-    assertEquals("high", ruleProperties.precision().get());
-    assertEquals("path-problem", ruleProperties.kind().get());
-    assertEquals(RuleProperties.Severity.error, ruleProperties.severity().get());
-    final ArrayList<String> esbTags = ruleProperties.tags().get();
-    assertEquals(3, esbTags.size());
-    assertEquals(1, esbTags.stream().filter("security"::equals).count());
-    assertEquals(1, esbTags.stream().filter("external/cwe/cwe-089"::equals).count());
-    assertEquals(1, esbTags.stream().filter("external/cwe/cwe-564"::equals).count());
+    private void assertDriver(String version, Driver driver) {
 
-    Mockito.verify(mockedParserCB, Mockito.times(1)).onFinding(resultCaptor.capture());
-    final Result result = resultCaptor.getValue();
-    assertEquals("java/input-resource-leak", result.ruleId().get());
-    assertEquals(64, result.ruleIndex().get());
-    assertEquals("This FileReader is not always closed on method exit.", result.message().get());
-    assertNotNull(result.locations());
-    assertEquals(1, result.locations().get().size());
-    final Location location = result.locations().get().get(0);
-    assertEquals("src/main/java/com/baloise/open/maven/codeql/sarif/SarifParser.java", location.uri());
-    assertEquals("%SRCROOT%", location.uriBaseId().get());
-    assertEquals(0, location.index().get());
-    assertNotNull(location.region().get());
-    final Region region = location.region().get();
-    assertEquals(84, region.startLine());
-    assertEquals(58, region.startColumn().get());
-    assertEquals(88, region.endColumn().get());
-  }
+        assertEquals("GitHub", driver.organization().get());
+        assertEquals("CodeQL", driver.name().get());
+        assertEquals(version, driver.semanticVersion().get());
+    }
+
+    private void assertRuleImpossibleArrayCast(Rule impossibleArrayCast) {
+
+        assertEquals("java/impossible-array-cast", impossibleArrayCast.id().get());
+        assertEquals("java/impossible-array-cast", impossibleArrayCast.name().get());
+        assertEquals("Impossible array cast",
+                impossibleArrayCast.shortDescription().get());
+        assertEquals(
+                "Trying to cast an array of a particular type as an array of a subtype causes a 'ClassCastException' at runtime.",
+                impossibleArrayCast.fullDescription().get());
+        assertNotNull(impossibleArrayCast.level());
+        assertEquals(Rule.Level.ERROR, impossibleArrayCast.level().get());
+
+        final RuleProperties icProperties = impossibleArrayCast.properties().get();
+        assertEquals("java/impossible-array-cast", icProperties.id().get());
+        assertEquals("Impossible array cast", icProperties.name().get());
+        assertEquals(
+                "Trying to cast an array of a particular type as an array of a subtype causes a\n              'ClassCastException' at runtime.",
+                icProperties.description().get());
+        assertEquals("low", icProperties.precision().get());
+        assertEquals("problem", icProperties.kind().get());
+        assertEquals(RuleProperties.Severity.error, icProperties.severity().get());
+
+        final List<String> icTags = icProperties.tags().get();
+        assertEquals(4, icTags.size());
+        assertEquals(1, icTags.stream().filter("reliability"::equals).count());
+        assertEquals(1, icTags.stream().filter("correctness"::equals).count());
+        assertEquals(1, icTags.stream().filter("logic"::equals).count());
+        assertEquals(1,
+                icTags.stream().filter("external/cwe/cwe-704"::equals).count());
+    }
+
+    private void assertRuleEmptySynchBlock(Rule emptySynchBlock) {
+
+        assertEquals("java/empty-synchronized-block", emptySynchBlock.id().get());
+        assertEquals("java/empty-synchronized-block", emptySynchBlock.name().get());
+        assertEquals("Empty synchronized block",
+                emptySynchBlock.shortDescription().get());
+        assertEquals(
+                "Empty synchronized blocks may indicate the presence of incomplete code or incorrect synchronization, and may lead to concurrency problems.",
+                emptySynchBlock.fullDescription().get());
+        assertEquals(emptySynchBlock.level(), Optional.empty());
+
+        final RuleProperties esbProperties = emptySynchBlock.properties().get();
+        assertEquals("java/empty-synchronized-block", esbProperties.id().get());
+        assertEquals("Empty synchronized block", esbProperties.name().get());
+        assertEquals(
+                "Empty synchronized blocks may indicate the presence of\n              incomplete code or incorrect synchronization, and may lead to concurrency problems.",
+                esbProperties.description().get());
+        assertEquals("low", esbProperties.precision().get());
+        assertEquals("problem", esbProperties.kind().get());
+        assertEquals(RuleProperties.Severity.warning,
+                esbProperties.severity().get());
+
+        final List<String> esbTags = esbProperties.tags().get();
+        assertEquals(5, esbTags.size());
+        assertEquals(1, esbTags.stream().filter("reliability"::equals).count());
+        assertEquals(1, esbTags.stream().filter("correctness"::equals).count());
+        assertEquals(1, esbTags.stream().filter("concurrency"::equals).count());
+        assertEquals(1,
+                esbTags.stream().filter("language-features"::equals).count());
+        assertEquals(1,
+                esbTags.stream().filter("external/cwe/cwe-585"::equals).count());
+    }
 }

@@ -13,18 +13,6 @@ public record Result(Optional<String> ruleId,
         Optional<String> message,
         Optional<List<Location>> locations) {
 
-    /*
-     * public final String asShortString() {
-     * String result = String.format("Found issue based on rule '%s': '%s'",
-     * ruleId().orElse(""),
-     * message().orElse(""));
-     * if (locations().isPresent() && !locations().get().isEmpty()) {
-     * result += "\nin '" + locations().get().get(0).toString() + "'";
-     * }
-     * return result;
-     * }
-     */
-
     @Override
     public final String toString() {
         return String.format("%s[%nruleId=%s%nruleIndex=%s%nmessage=%s%nlocations=%s%n]",

@@ -10,7 +10,6 @@
         "filePath": "src/main/java/org/arburk/fishbone/infrastructure/service/FishRepository.java",
         "textRange": {
           "startLine": 26,
-          "endLine": 26,
           "startColumn": 9,
           "endColumn": 13
         }

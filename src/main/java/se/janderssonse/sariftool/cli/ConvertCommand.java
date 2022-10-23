@@ -3,12 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package se.janderssonse.sariftool.cli;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -43,41 +40,37 @@ public final class ConvertCommand implements Runnable {
     @Override
     public void run() {
 
-        collectSarifPaths(sourcePath).forEach(sarifFile -> {
+        fileToSarifParsers().stream()
+                .filter(parser -> parser.validated())
+                .forEach(parser -> getDefaultMappers(parser)
+                        .forEach(mapper -> mapper.map(targetPath(parser.sarifFile()),
+                                excludePaths)));
+    }
 
-            LOG.info("Converting: ".concat(sarifFile.toAbsolutePath().toString()));
+    private List<SarifParser> fileToSarifParsers() {
+        return sarifPaths(sourcePath).stream().map(sarifFile -> new SarifParser(sarifFile)).toList();
+    }
 
-            try {
-                SarifParser.map(sarifFile, defaultMappers(), targetPath(sarifFile), excludePaths);
-            } catch (IOException | IllegalArgumentException e) {
-                LOG.severe("Fail: " + e.toString());
-            }
-        });
+    private List<Path> sarifPaths(final Path sourceFile) {
+
+        if (Files.isRegularFile(sourceFile)) {
+            return List.of(sourceFile);
+        } else if (Files.isDirectory(sourceFile)) {
+            return Util.findFiles(sourceFile, "sarif");
+        } else {
+            LOG.info(String.format("Input incorrect, was: %s. Please add a path to a valid SARIF dir or file.",
+                    sourceFile.toAbsolutePath()));
+            return List.of();
+        }
     }
 
     private Path targetPath(final Path sarifFile) {
         return Paths.get(outputDir.toString(), Util.removeFileExtension(sarifFile, true).concat(".json"));
     }
 
-    private List<Mapper> defaultMappers() {
+    private List<Mapper> getDefaultMappers(final SarifParser parser) {
         MapperType format = MapperType.valueOf(tool.toUpperCase());
-        Mapper sonarIssueMapper = MapperFactory.getMapper(format);
-        Mapper logMapper = MapperFactory.getMapper(MapperType.LOG);
-        return List.of(logMapper, sonarIssueMapper);
-
+        Mapper sonarIssueMapper = MapperFactory.getMapper(format, parser);
+        return List.of(sonarIssueMapper);
     }
-
-    private List<Path> collectSarifPaths(final Path sourceFile) {
-
-        if (Files.isRegularFile(sourceFile)) {
-            return new ArrayList<>(List.of(sourceFile));
-        } else if (Files.isDirectory(sourceFile)) {
-            return Util.findFiles(sourceFile, "sarif");
-        } else {
-            LOG.info(String.format("Input incorrect, was: %s. Please add a path to a valid SARIF dir or file.",
-                    sourceFile.toAbsolutePath()));
-        }
-        return Collections.emptyList();
-    }
-
 }
