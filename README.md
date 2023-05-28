@@ -1,6 +1,6 @@
 # SarifTool
 
-NOTE: THIS project will most likely not be continued. It was started when sonarqube didn't allow for import of the SARIF format. That has now been fixed
+NOTE: This project will most likely not be continued. It was started when sonarqube didn't allow for import of the SARIF format. That has now been fixed
 by SonarQuebe, and so the initial motivation is gone. And there are other SARIF-parsers out there to use.
 However it was a fun practice in building a CLI and generatiing a native exe from that with graalvm, so I might continue it in the future. The SarifParser
 and the cli graalvm worked quite ok when having a look at it.
