@@ -22,7 +22,7 @@ jobs:
       # so that it matches the one you would get if
       # you built it in CLI with mvn -Pnative.
       # Makes the COPY in dockerfile predictable
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: sariftool-bin-ubuntu-latest
           path: ${{ env.ARTIFACT_TARGET }}
